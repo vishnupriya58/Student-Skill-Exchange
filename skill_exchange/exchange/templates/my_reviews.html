@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Reviews
+{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary: #7c3aed;
+        --primary-light: #a855f7;
+        --accent: #ec4899;
+        --bg: #f7f5ff;
+        --card: #ffffff;
+        --text: #1e1b4b;
+        --muted: #6b7280;
+        --star: #fbbf24;
+    }
+
+    .reviews-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 10% 0%, rgba(168, 85, 247, 0.12), transparent 40%),
+            radial-gradient(circle at 90% 100%, rgba(236, 72, 153, 0.12), transparent 40%),
+            var(--bg);
+        padding: 60px 20px 80px;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .reviews-container {
+        max-width: 960px;
+        margin: auto;
+    }
+
+    /* ---------- HEADER ---------- */
+    .reviews-header {
+        position: relative;
+        background: linear-gradient(135deg, #7c3aed 0%, #a855f7 45%, #ec4899 100%);
+        color: white;
+        border-radius: 28px;
+        padding: 45px 35px;
+        text-align: center;
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.45);
+    }
+
+    .reviews-header::before {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        top: -90px;
+        right: -60px;
+    }
+
+    .reviews-header::after {
+        content: "";
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        bottom: -70px;
+        left: -40px;
+    }
+
+    .reviews-header h1 {
+        font-weight: 800;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+        letter-spacing: -0.5px;
+    }
+
+    .reviews-header p {
+        margin: 0;
+        opacity: 0.95;
+        font-size: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .header-stats {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-pill {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .stat-pill strong {
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    /* ---------- REVIEW CARD ---------- */
+    .review-card {
+        position: relative;
+        background: var(--card);
+        border-radius: 22px;
+        padding: 26px 28px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px rgba(30, 27, 75, 0.06);
+        border: 1px solid rgba(124, 58, 237, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .review-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: linear-gradient(180deg, #a855f7, #ec4899);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .review-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px -12px rgba(124, 58, 237, 0.25);
+    }
+
+    .review-card:hover::before {
+        opacity: 1;
+    }
+
+    .review-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 800;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        box-shadow: 0 6px 16px rgba(168, 85, 247, 0.35);
+    }
+
+    .reviewer {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .review-date {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 2px;
+    }
+
+    .stars {
+        color: var(--star);
+        font-size: 1.15rem;
+        letter-spacing: 3px;
+        filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.35));
+    }
+
+    .review-text {
+        color: #4b5563;
+        margin: 18px 0 0;
+        line-height: 1.7;
+        font-size: 0.98rem;
+        padding-left: 64px;
+        position: relative;
+    }
+
+    .review-text::before {
+        content: "“";
+        position: absolute;
+        left: 20px;
+        top: -12px;
+        font-size: 3rem;
+        color: rgba(168, 85, 247, 0.25);
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+
+    /* ---------- EMPTY STATE ---------- */
+    .empty-review {
+        background: white;
+        border-radius: 24px;
+        padding: 70px 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(30, 27, 75, 0.06);
+        border: 2px dashed rgba(168, 85, 247, 0.25);
+    }
+
+    .empty-review-icon {
+        font-size: 3.5rem;
+        margin-bottom: 18px;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .empty-review h4 {
+        color: var(--text);
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .empty-review p {
+        color: var(--muted);
+        margin: 0;
+    }
+
+    /* ---------- BACK BUTTON ---------- */
+    .back-wrapper {
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 28px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.5);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .back-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px -5px rgba(124, 58, 237, 0.6);
+    }
+
+    @media (max-width: 576px) {
+        .reviews-header h1 { font-size: 1.6rem; }
+        .review-text { padding-left: 0; }
+        .review-text::before { display: none; }
+        .avatar { width: 42px; height: 42px; font-size: 1rem; }
+    }
+</style>
+
+<div class="reviews-page">
+    <div class="reviews-container">
+
+        <!-- HEADER -->
+        <div class="reviews-header">
+            <h1>⭐ My Reviews</h1>
+            <p>See what students are saying about you.</p>
+
+            {% if ratings %}
+            <div class="header-stats">
+                <div class="stat-pill">
+                    💬 <strong>{{ ratings|length }}</strong> Review{{ ratings|length|pluralize }}
+                </div>
+                <div class="stat-pill">
+                    ⭐ <strong>4.8</strong> Average
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- REVIEWS -->
+        {% for rating in ratings %}
+        <div class="review-card">
+
+            <div class="review-top">
+
+                <div class="reviewer-info">
+                    <div class="avatar">
+                        {{ rating.reviewer.user.username|first|upper }}
+                    </div>
+                    <div>
+                        <p class="reviewer">{{ rating.reviewer.user.username }}</p>
+                        <div class="review-date">{{ rating.created_at|date:"d M Y" }}</div>
+                    </div>
+                </div>
+
+                <div class="stars">
+                    {% if rating.rating == 5 %}★★★★★
+                    {% elif rating.rating == 4 %}★★★★☆
+                    {% elif rating.rating == 3 %}★★★☆☆
+                    {% elif rating.rating == 2 %}★★☆☆☆
+                    {% else %}★☆☆☆☆{% endif %}
+                </div>
+
+            </div>
+
+            {% if rating.review %}
+            <p class="review-text">{{ rating.review }}</p>
+            {% endif %}
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-review">
+            <div class="empty-review-icon">⭐</div>
+            <h4>No Reviews Yet</h4>
+            <p>You haven't received any ratings or reviews yet.</p>
+        </div>
+
+        {% endfor %}
+
+        <!-- BACK -->
+        <div class="back-wrapper">
+            <a href="{% url 'dashboard' %}" class="back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

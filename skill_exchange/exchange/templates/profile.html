@@ -1,0 +1,914 @@
+{% extends "base.html" %}
+{% block title %}
+{{ student_profile.user.username }} - Profile
+{% endblock %}
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    /* ===== GLOBAL RESET & BASE ===== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .profile-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 0 20px 50px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* ===== PROFILE CARD – elevated with glass effect ===== */
+    .profile-card {
+        background: #ffffff;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow:
+            0 4px 6px -1px rgba(15, 23, 42, 0.03),
+            0 12px 24px -6px rgba(15, 23, 42, 0.06),
+            0 30px 60px -12px rgba(15, 23, 42, 0.12);
+        border: 1px solid #eef0f7;
+        transition: box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+
+
+    .profile-card:hover {
+        box-shadow:
+            0 8px 12px -2px rgba(15, 23, 42, 0.05),
+            0 20px 36px -8px rgba(15, 23, 42, 0.08),
+            0 40px 80px -16px rgba(15, 23, 42, 0.16);
+        transform: translateY(-4px);
+    }
+
+    /* ===== COVER – deep gradient + animated accent + noise ===== */
+    .cover {
+        height: 220px;
+        background: linear-gradient(145deg, #0f0c29 0%, #1a1a2e 30%, #16213e 60%, #0f3460 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cover::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 15% 25%, rgba(102, 126, 234, 0.30) 0%, transparent 50%),
+            radial-gradient(circle at 85% 75%, rgba(118, 75, 162, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.10) 0%, transparent 65%),
+            radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 40%);
+        pointer-events: none;
+    }
+
+    /* decorative floating orbs */
+    .cover::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+        background-size: 300% 100%;
+        animation: gradientShift 5s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    /* floating orbs animation */
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+        animation: float 8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .orb-1 {
+        width: 120px;
+        height: 120px;
+        top: 10%;
+        right: 15%;
+        animation-delay: 0s;
+    }
+
+    .orb-2 {
+        width: 80px;
+        height: 80px;
+        bottom: 20%;
+        left: 10%;
+        animation-delay: 2s;
+    }
+
+    .orb-3 {
+        width: 60px;
+        height: 60px;
+        top: 50%;
+        right: 40%;
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+        50% { transform: translateY(-20px) scale(1.1); opacity: 0.8; }
+    }
+
+    /* ===== PROFILE IMAGE ===== */
+    .profile-image-wrapper {
+        position: absolute;
+        bottom: -75px;
+        left: 50px;
+        z-index: 10;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 6px solid #ffffff;
+        background: #e2e8f0;
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.12),
+            0 0 0 1px rgba(102, 126, 234, 0.08),
+            0 0 0 6px rgba(255, 255, 255, 0.3);
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    box-shadow 0.4s ease;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow:
+            0 16px 40px rgba(0, 0, 0, 0.18),
+            0 0 0 1px rgba(102, 126, 234, 0.15),
+            0 0 0 8px rgba(255, 255, 255, 0.4);
+    }
+
+    .default-profile {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 6px solid #ffffff;
+        background: linear-gradient(145deg, #eef2ff, #e0e7ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        font-size: 60px;
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.12),
+            0 0 0 1px rgba(102, 126, 234, 0.08),
+            0 0 0 6px rgba(255, 255, 255, 0.3);
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    box-shadow 0.4s ease;
+    }
+
+    .default-profile:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow:
+            0 16px 40px rgba(0, 0, 0, 0.18),
+            0 0 0 1px rgba(102, 126, 234, 0.15),
+            0 0 0 8px rgba(255, 255, 255, 0.4);
+    }
+
+    /* online status indicator */
+    .status-dot {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 22px;
+        height: 22px;
+        background: #48bb78;
+        border-radius: 50%;
+        border: 4px solid #ffffff;
+        box-shadow: 0 2px 8px rgba(72, 187, 120, 0.4);
+        z-index: 11;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(72, 187, 120, 0); }
+    }
+
+    /* ===== PROFILE HEADER ===== */
+    .profile-header {
+        padding: 95px 50px 30px;
+    }
+
+    .profile-header h1 {
+        font-size: 34px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: #172033;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+    }
+
+    .role {
+        color: #667eea;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f0f3ff;
+        padding: 6px 16px;
+        border-radius: 50px;
+        border: 1px solid #e0e7ff;
+    }
+
+    .role::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+        animation: rolePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes rolePulse {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25); }
+        50% { box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.08); }
+    }
+
+    /* ===== CONTENT ===== */
+    .profile-content {
+        padding: 0 50px 50px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 800;
+        margin: 38px 0 20px;
+        color: #172033;
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title::before {
+        content: "";
+        width: 4px;
+        height: 22px;
+        border-radius: 4px;
+        background: linear-gradient(180deg, #667eea, #764ba2);
+        flex-shrink: 0;
+    }
+
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, #e2e8f0, transparent);
+        margin-left: 8px;
+    }
+
+    /* ===== INFO GRID ===== */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .info-card {
+        background: #f8f9ff;
+        border: 1px solid #edf0ff;
+        border-radius: 20px;
+        padding: 24px;
+        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea, #764ba2);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .info-card:hover::before {
+        opacity: 1;
+    }
+
+    .info-card:hover {
+        background: #ffffff;
+        border-color: #dfe3f0;
+        box-shadow:
+            0 4px 6px -2px rgba(15, 23, 42, 0.04),
+            0 12px 28px -8px rgba(15, 23, 42, 0.12);
+        transform: translateY(-4px);
+    }
+
+    .info-label {
+        font-size: 11px;
+        color: #64748b;
+        margin-bottom: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        word-break: break-word;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        line-height: 1.4;
+    }
+
+    .info-value i {
+        color: #667eea;
+        font-size: 14px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+        background: #eef2ff;
+        padding: 6px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover .info-value i {
+        background: #667eea;
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+
+    /* ===== BIO ===== */
+    .bio-box {
+        background: linear-gradient(145deg, #f8f9ff, #f0f3ff);
+        border: 1px solid #edf0ff;
+        border-radius: 20px;
+        padding: 28px 28px 28px 50px;
+        color: #475569;
+        line-height: 1.8;
+        font-size: 15px;
+        position: relative;
+        transition: all 0.35s ease;
+        min-height: 80px;
+    }
+
+    .bio-box::before {
+        content: "\201C";
+        position: absolute;
+        top: 12px;
+        left: 20px;
+        font-size: 56px;
+        color: #c7d2fe;
+        font-family: Georgia, serif;
+        line-height: 1;
+        pointer-events: none;
+        transition: color 0.3s ease;
+    }
+
+    .bio-box:hover::before {
+        color: #a5b4fc;
+    }
+
+    .bio-box:hover {
+        background: #ffffff;
+        border-color: #dfe3f0;
+        box-shadow: 0 8px 28px -12px rgba(15, 23, 42, 0.12);
+        transform: translateY(-2px);
+    }
+
+
+    /* ===== SKILLS ===== */
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .skill-chip {
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-size: 13.5px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.2px;
+    }
+
+    .skill-chip::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .skill-chip:hover::after {
+        left: 100%;
+    }
+
+    .skill-chip:hover {
+        transform: translateY(-3px) scale(1.02);
+    }
+
+    .skill-chip.teach {
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        color: #4f46e5;
+        border: 1px solid #dbe2fb;
+    }
+
+    .skill-chip.teach:hover {
+        background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        box-shadow: 0 8px 20px -8px rgba(79, 70, 229, 0.35);
+        border-color: #c7d2fe;
+    }
+
+    .skill-chip.learn {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        color: #059669;
+        border: 1px solid #d1fae5;
+    }
+
+    .skill-chip.learn:hover {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        box-shadow: 0 8px 20px -8px rgba(5, 150, 105, 0.35);
+        border-color: #a7f3d0;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+    }
+
+    .empty-skills {
+        color: #94a3b8;
+        font-size: 14px;
+        font-style: italic;
+        padding: 16px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .empty-skills::before {
+        content: "—";
+        color: #cbd5e0;
+    }
+
+
+
+    /* ===== ACTION BUTTONS ===== */
+    .action-row {
+        display: flex;
+        gap: 16px;
+        margin-top: 45px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        text-decoration: none;
+        padding: 15px 30px;
+        border-radius: 16px;
+        font-size: 14.5px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.2px;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 6px 22px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-edit::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.20), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .btn-edit:hover::after {
+        left: 100%;
+    }
+
+    .btn-edit:hover {
+        color: white;
+        transform: translateY(-4px);
+        box-shadow: 0 14px 32px rgba(102, 126, 234, 0.50);
+    }
+
+    .btn-edit:active {
+        transform: translateY(-1px);
+    }
+
+    .btn-back {
+        background: #ffffff;
+        color: #4f46e5;
+        border-color: #dbe2fb;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .btn-back:hover {
+        background: #f5f3ff;
+        color: #4338ca;
+        border-color: #c7d2fe;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px -8px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-back:active {
+        transform: translateY(-1px);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+        .profile-container {
+            margin: 25px auto;
+            padding: 0 16px 40px;
+        }
+
+        .cover {
+            height: 170px;
+        }
+
+        .profile-image-wrapper {
+            left: 25px;
+            bottom: -60px;
+        }
+
+        .profile-image,
+        .default-profile {
+            width: 120px;
+            height: 120px;
+        }
+
+        .default-profile {
+            font-size: 48px;
+        }
+
+        .status-dot {
+            width: 18px;
+            height: 18px;
+            bottom: 8px;
+            right: 8px;
+        }
+
+        .profile-header {
+            padding: 85px 25px 25px;
+        }
+
+        .profile-header h1 {
+            font-size: 26px;
+        }
+
+        .profile-content {
+            padding: 0 25px 35px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .info-card {
+            padding: 20px;
+        }
+
+        .bio-box {
+            padding: 24px 24px 24px 44px;
+        }
+
+        .action-row {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 16px;
+            margin: 30px 0 16px;
+        }
+
+        .section-title::before {
+            height: 18px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .profile-header h1 {
+            font-size: 22px;
+        }
+
+        .profile-image,
+        .default-profile {
+            width: 100px;
+            height: 100px;
+        }
+
+        .default-profile {
+            font-size: 40px;
+        }
+
+        .profile-image-wrapper {
+            bottom: -52px;
+        }
+
+        .profile-header {
+            padding: 75px 20px 20px;
+        }
+
+        .profile-content {
+            padding: 0 20px 30px;
+        }
+
+        .cover {
+            height: 150px;
+        }
+    }
+
+    /* ===== SUBTLE ENTRY ANIMATIONS ===== */
+    .profile-card > * {
+        animation: fadeInUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0;
+    }
+
+    .profile-card > *:nth-child(1) { animation-delay: 0.05s; }
+    .profile-card > *:nth-child(2) { animation-delay: 0.15s; }
+    .profile-card > *:nth-child(3) { animation-delay: 0.25s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* staggered entry for info cards */
+    .info-card {
+        animation: fadeInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0;
+    }
+
+    .info-card:nth-child(1) { animation-delay: 0.10s; }
+    .info-card:nth-child(2) { animation-delay: 0.15s; }
+    .info-card:nth-child(3) { animation-delay: 0.20s; }
+    .info-card:nth-child(4) { animation-delay: 0.25s; }
+    .info-card:nth-child(5) { animation-delay: 0.30s; }
+    .info-card:nth-child(6) { animation-delay: 0.35s; }
+
+    /* skill chips */
+    .skill-chip {
+        animation: fadeInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0;
+    }
+
+    .skill-chip:nth-child(1) { animation-delay: 0.05s; }
+    .skill-chip:nth-child(2) { animation-delay: 0.10s; }
+    .skill-chip:nth-child(3) { animation-delay: 0.15s; }
+    .skill-chip:nth-child(4) { animation-delay: 0.20s; }
+    .skill-chip:nth-child(5) { animation-delay: 0.25s; }
+    .skill-chip:nth-child(6) { animation-delay: 0.30s; }
+    .skill-chip:nth-child(7) { animation-delay: 0.35s; }
+    .skill-chip:nth-child(8) { animation-delay: 0.40s; }
+</style>
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <!-- ===== COVER ===== -->
+        <div class="cover">
+            <!-- floating decorative orbs -->
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+
+            <div class="profile-image-wrapper">
+
+                {% if student_profile.profile_picture %}
+                    <img src="{{ student_profile.profile_picture.url }}"
+                         class="profile-image"
+                         alt="Profile Picture">
+                {% else %}
+                    <div class="default-profile">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+
+                <!-- online status dot -->
+                <div class="status-dot"></div>
+
+            </div>
+        </div>
+
+
+        <!-- ===== PROFILE HEADER ===== -->
+        <div class="profile-header">
+            <h1>{{ student_profile.user.username }}</h1>
+            <div class="role">Student Skill Exchange Member</div>
+        </div>
+
+
+        <!-- ===== CONTENT ===== -->
+        <div class="profile-content">
+
+            <!-- PROFILE INFORMATION -->
+            <div class="section-title">Profile Information</div>
+
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <div class="info-label">Username</div>
+                    <div class="info-value">
+                        <i class="fas fa-user"></i>
+                        {{ student_profile.user.username }}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">
+                        <i class="fas fa-envelope"></i>
+                        {{ student_profile.user.email }}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">
+                        {% if student_profile.phone %}
+                            <i class="fas fa-phone"></i>
+                            {{ student_profile.phone }}
+                        {% else %}
+                            <i class="fas fa-phone"></i>
+                            Not added
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">Education</div>
+                    <div class="info-value">
+                        {% if student_profile.education %}
+                            <i class="fas fa-graduation-cap"></i>
+                            {{ student_profile.education }}
+                        {% else %}
+                            <i class="fas fa-graduation-cap"></i>
+                            Not added
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">Location</div>
+                    <div class="info-value">
+                        {% if student_profile.location %}
+                            <i class="fas fa-location-dot"></i>
+                            {{ student_profile.location }}
+                        {% else %}
+                            <i class="fas fa-location-dot"></i>
+                            Not added
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">
+                        <i class="fas fa-calendar"></i>
+                        {{ student_profile.user.date_joined|date:"F Y" }}
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- BIO -->
+            <div class="section-title">About Me</div>
+
+            <div class="bio-box">
+                {% if student_profile.bio %}
+                    {{ student_profile.bio }}
+                {% else %}
+                    No bio added yet.
+                {% endif %}
+            </div>
+
+
+            <!-- TEACHING SKILLS -->
+            <div class="section-title">Skills I Can Teach</div>
+
+            <div class="skills-container">
+
+                {% for student_skill in student_profile.studentskill_set.all %}
+
+                    {% if student_skill.skill_type == "teach" %}
+                        <span class="skill-chip teach">
+                            <span class="dot"></span>
+                            {{ student_skill.skill.name }}
+                        </span>
+                    {% endif %}
+
+                {% empty %}
+
+                    <span class="empty-skills">
+                        No teaching skills added yet.
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- LEARNING SKILLS -->
+            <div class="section-title">Skills I Want to Learn</div>
+
+            <div class="skills-container">
+
+                {% for student_skill in student_profile.studentskill_set.all %}
+
+                    {% if student_skill.skill_type == "learn" %}
+                        <span class="skill-chip learn">
+                            <span class="dot"></span>
+                            {{ student_skill.skill.name }}
+                        </span>
+                    {% endif %}
+
+                {% empty %}
+
+                    <span class="empty-skills">
+                        No learning skills added yet.
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-row">
+
+                <a href="{% url 'edit_profile' %}" class="btn-action btn-edit">
+                    <i class="fas fa-edit"></i>
+                    Edit Profile
+                </a>
+
+                <a href="{% url 'dashboard' %}" class="btn-action btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

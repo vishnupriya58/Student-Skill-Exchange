@@ -1,0 +1,228 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Send Exchange Request
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .request-container {
+        max-width: 700px;
+        margin: 50px auto;
+    }
+
+    .request-card {
+        border: none;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .request-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 35px;
+        text-align: center;
+    }
+
+    .request-header h2 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .request-header p {
+        margin-bottom: 0;
+        opacity: 0.9;
+    }
+
+    .request-body {
+        padding: 35px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 12px;
+        padding: 13px 16px;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+
+    .btn-send {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        border: none;
+        color: #2d2b4e;
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(67, 233, 123, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-send:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(67, 233, 123, 0.4);
+    }
+
+    .btn-cancel {
+        background: #f1f3f5;
+        border: none;
+        color: #495057;
+        padding: 14px 35px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+    }
+
+    .student-name {
+        color: #667eea;
+        font-weight: 700;
+    }
+
+</style>
+
+
+<div class="container request-container">
+
+    <div class="card request-card">
+
+        <!-- Header -->
+        <div class="request-header">
+
+            <div style="font-size: 50px;">
+                🤝
+            </div>
+
+            <h2>
+                Send Exchange Request
+            </h2>
+
+            <p>
+                Request a skill exchange with
+                <span class="student-name text-white">
+                    {{ receiver.user.username }}
+                </span>
+            </p>
+
+        </div>
+
+
+        <!-- Body -->
+        <div class="request-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- Skill -->
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Select Skill
+                    </label>
+
+                    {% if skills %}
+
+                        <select name="skill"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                -- Choose a skill --
+                            </option>
+
+                            {% for item in skills %}
+
+                                <option value="{{ item.skill.id }}">
+                                    {{ item.skill.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <small class="text-muted">
+                            Choose the skill you want to learn from this student.
+                        </small>
+
+                    {% else %}
+
+                        <div class="alert alert-info">
+                            This student has not added any skills they can teach yet.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Message -->
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Message
+                    </label>
+
+                    <textarea name="message"
+                              class="form-control"
+                              rows="5"
+                              placeholder="Write a message to the student..."></textarea>
+
+                    <small class="text-muted">
+                        Introduce yourself and explain what you would like to learn.
+                    </small>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="text-center mt-4">
+
+                    {% if skills %}
+
+                        <button type="submit"
+                                class="btn btn-send me-2">
+
+                            🤝 Send Request
+
+                        </button>
+
+                    {% endif %}
+
+
+                    <a href="{% url 'student_profile' receiver.id %}"
+                       class="btn btn-cancel">
+
+                        ← Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

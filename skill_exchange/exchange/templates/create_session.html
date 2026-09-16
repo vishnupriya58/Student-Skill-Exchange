@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Schedule Learning Session</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                145deg,
+                #eef2f7,
+                #f9fcff
+            );
+            min-height: 100vh;
+            padding: 30px 15px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #1a2639;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 30px;
+
+            box-shadow:
+                0 25px 50px rgba(28, 45, 85, 0.15);
+        }
+
+        /* Back button */
+
+        .back {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            background: white;
+
+            color: #2d3a5e;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            font-size: 14px;
+
+            padding: 10px 20px;
+
+            border-radius: 30px;
+
+            border: 1px solid #e1e6f5;
+
+            margin-bottom: 25px;
+
+            transition: 0.3s;
+        }
+
+        .back i {
+            color: #667eea;
+        }
+
+        .back:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 18px rgba(102, 126, 234, 0.15);
+        }
+
+        /* Heading */
+
+        h1 {
+            text-align: center;
+
+            font-size: 30px;
+
+            margin-bottom: 20px;
+
+            color: #1e2b4a;
+        }
+
+        h1 i {
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        /* Receiver */
+
+        .receiver-info {
+            text-align: center;
+
+            background: #eef2ff;
+
+            padding: 15px;
+
+            border-radius: 30px;
+
+            margin-bottom: 25px;
+
+            color: #2d3a5e;
+        }
+
+        .receiver-info i {
+            color: #667eea;
+
+            margin-right: 5px;
+        }
+
+        .receiver-info strong {
+            background: white;
+
+            padding: 5px 15px;
+
+            border-radius: 20px;
+
+            margin-left: 5px;
+        }
+
+        /* Labels */
+
+        label {
+            display: block;
+
+            margin-top: 18px;
+
+            margin-bottom: 7px;
+
+            font-weight: 600;
+
+            font-size: 14px;
+
+            color: #1e2b4a;
+        }
+
+        label i {
+            color: #667eea;
+
+            margin-right: 6px;
+        }
+
+        /* Inputs */
+
+        input,
+        textarea {
+            width: 100%;
+
+            padding: 13px 16px;
+
+            border: 1.5px solid #e1e6f0;
+
+            border-radius: 15px;
+
+            font-family: 'Inter', sans-serif;
+
+            font-size: 15px;
+
+            background: white;
+
+            transition: 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+
+            border-color: #667eea;
+
+            box-shadow:
+                0 0 0 4px rgba(102, 126, 234, 0.12);
+        }
+
+        textarea {
+            height: 110px;
+
+            resize: vertical;
+        }
+
+        /* Button */
+
+        button {
+            width: 100%;
+
+            margin-top: 30px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: linear-gradient(
+                135deg,
+                #667eea,
+                #5a6fd8
+            );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(102, 126, 234, 0.35);
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 25px 20px;
+
+                border-radius: 25px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+
+            .receiver-info {
+                font-size: 14px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Back -->
+
+    <a
+        href="{% url 'student_profile' receiver.id %}"
+        class="back"
+    >
+        <i class="fas fa-arrow-left"></i>
+        Back to Profile
+    </a>
+
+
+    <!-- Heading -->
+
+    <h1>
+        <i class="fas fa-calendar-plus"></i>
+        Schedule Learning Session
+    </h1>
+
+
+    <!-- Receiver -->
+
+    <div class="receiver-info">
+
+        <i class="fas fa-user-graduate"></i>
+
+        Schedule a session with
+
+        <strong>
+            {{ receiver.user.username }}
+        </strong>
+
+    </div>
+
+
+    <!-- Form -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- Title -->
+
+        <label>
+            <i class="fas fa-heading"></i>
+            Session Title
+        </label>
+
+        <input
+            type="text"
+            name="title"
+            placeholder="Example: Python Basics"
+            required
+        >
+
+
+        <!-- Description -->
+
+        <label>
+            <i class="fas fa-align-left"></i>
+            Description
+        </label>
+
+        <textarea
+            name="description"
+            placeholder="What will you teach or learn?"
+        ></textarea>
+
+
+        <!-- Date -->
+
+        <label>
+            <i class="fas fa-calendar-alt"></i>
+            Session Date
+        </label>
+
+        <input
+            type="date"
+            name="session_date"
+            required
+        >
+
+
+        <!-- Time -->
+
+        <label>
+            <i class="fas fa-clock"></i>
+            Session Time
+        </label>
+
+        <input
+            type="time"
+            name="session_time"
+            required
+        >
+
+
+        <!-- Duration -->
+
+        <label>
+            <i class="fas fa-hourglass-half"></i>
+            Duration (minutes)
+        </label>
+
+        <input
+            type="number"
+            name="duration"
+            placeholder="Example: 60"
+            min="1"
+            required
+        >
+
+
+        <!-- Meeting Link -->
+
+        <label>
+            <i class="fas fa-video"></i>
+            Meeting Link
+        </label>
+
+        <input
+            type="url"
+            name="meeting_link"
+            placeholder="https://meet.google.com/xxx-xxxx-xxx"
+        >
+
+
+        <!-- Submit -->
+
+        <button type="submit">
+
+            <i class="fas fa-check-circle"></i>
+
+            Schedule Session
+
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

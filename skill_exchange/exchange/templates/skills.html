@@ -1,0 +1,775 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Skills
+{% endblock %}
+
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+
+    * { box-sizing: border-box; }
+
+    .skills-page {
+        position: relative;
+        overflow: hidden;
+        padding: 70px 20px 80px;
+        min-height: 90vh;
+        font-family: 'DM Sans', sans-serif;
+        background:
+            radial-gradient(circle at 0% 0%, #f3efff 0%, transparent 45%),
+            radial-gradient(circle at 100% 100%, #fdeef5 0%, transparent 45%),
+            #faf9ff;
+    }
+
+    /* Soft floating decor */
+    .skills-page::before,
+    .skills-page::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.55;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .skills-page::before {
+        width: 340px; height: 340px;
+        background: #c7b8ff;
+        top: -120px; left: -120px;
+        animation: floatBlob 14s ease-in-out infinite;
+    }
+    .skills-page::after {
+        width: 380px; height: 380px;
+        background: #f7b8d4;
+        bottom: -140px; right: -140px;
+        animation: floatBlob 18s ease-in-out infinite reverse;
+    }
+
+    @keyframes floatBlob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50%      { transform: translate(25px, -20px) scale(1.08); }
+    }
+
+    .skills-wrapper {
+        max-width: 1120px;
+        margin: auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ============ HEADER ============ */
+    .page-heading {
+        text-align: center;
+        margin-bottom: 55px;
+    }
+
+    .small-heading {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
+        border-radius: 50px;
+        background: #ffffff;
+        color: #7257c7;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+        border: 1px solid #ece5ff;
+        box-shadow: 0 6px 18px rgba(118, 88, 201, 0.10);
+    }
+
+    .page-heading h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 52px;
+        color: #29263d;
+        margin-bottom: 14px;
+        letter-spacing: -0.5px;
+    }
+
+    .page-heading h1 span {
+        position: relative;
+        color: #7658c9;
+    }
+
+    .page-heading h1 span::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: 4px;
+        height: 8px;
+        background: linear-gradient(90deg, #d9c8ff, #f7b8d4);
+        border-radius: 4px;
+        z-index: -1;
+        opacity: 0.6;
+    }
+
+    .page-heading p {
+        color: #858198;
+        font-size: 15.5px;
+        max-width: 620px;
+        margin: auto;
+        line-height: 1.75;
+    }
+
+    /* ============ GRID ============ */
+    .skill-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+    }
+
+    /* ============ PANEL ============ */
+    .skill-panel {
+        background: #ffffff;
+        border: 1px solid #eeeaf7;
+        border-radius: 28px;
+        padding: 30px 28px 28px;
+        box-shadow:
+            0 1px 2px rgba(55, 43, 91, 0.04),
+            0 20px 60px rgba(55, 43, 91, 0.07);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-panel::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 5px;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.45s ease;
+    }
+
+    .skill-panel:hover {
+        transform: translateY(-6px);
+        box-shadow:
+            0 1px 2px rgba(55, 43, 91, 0.06),
+            0 30px 80px rgba(55, 43, 91, 0.14);
+    }
+
+    .skill-panel:hover::before {
+        transform: scaleX(1);
+    }
+
+    /* Panel themes */
+    .skill-panel.teach-panel::before {
+        background: linear-gradient(90deg, #a78bfa, #7658c9);
+    }
+
+    .skill-panel.learn-panel::before {
+        background: linear-gradient(90deg, #f9a8d4, #c15b82);
+    }
+
+    /* ============ PANEL HEADER ============ */
+    .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #f2eff9;
+    }
+
+    .panel-title-area {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .panel-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        transition: transform 0.35s ease;
+        position: relative;
+    }
+
+    .skill-panel:hover .panel-icon {
+        transform: rotate(-6deg) scale(1.08);
+    }
+
+    .teach-icon {
+        background: linear-gradient(135deg, #eee9ff, #ddd2ff);
+        color: #7257c7;
+        box-shadow: 0 8px 20px rgba(118, 88, 201, 0.18);
+    }
+
+    .learn-icon {
+        background: linear-gradient(135deg, #fcecf3, #fbdce8);
+        color: #c15b82;
+        box-shadow: 0 8px 20px rgba(193, 91, 130, 0.16);
+    }
+
+    .panel-title h2 {
+        font-size: 19px;
+        font-weight: 800;
+        color: #302c43;
+        margin: 0 0 4px;
+        letter-spacing: -0.2px;
+    }
+
+    .panel-title p {
+        margin: 0;
+        font-size: 12.5px;
+        color: #9b96aa;
+        font-weight: 500;
+    }
+
+    .skill-count {
+        min-width: 40px;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        transition: transform 0.3s ease;
+    }
+
+    .skill-panel:hover .skill-count {
+        transform: scale(1.08);
+    }
+
+    .teach-count {
+        background: #eee9ff;
+        color: #7257c7;
+    }
+
+    .learn-count {
+        background: #fcecf3;
+        color: #c15b82;
+    }
+
+    /* ============ SKILL ITEMS ============ */
+    .skill-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .skill-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: #fbfaff;
+        border: 1px solid #f0edf7;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-item::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0;
+        width: 3px; height: 100%;
+        background: #a78bfa;
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.3s ease;
+    }
+
+    .skill-item:hover {
+        transform: translateX(6px);
+        background: #ffffff;
+        border-color: #ddd4f7;
+        box-shadow: 0 8px 22px rgba(118, 88, 201, 0.10);
+    }
+
+    .skill-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .learn-panel .skill-item::before {
+        background: #f9a8d4;
+    }
+
+    .learn-panel .skill-item:hover {
+        background: #ffffff;
+        border-color: #f3d7e2;
+        box-shadow: 0 8px 22px rgba(193, 91, 130, 0.10);
+    }
+
+    .skill-left {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        min-width: 0;
+    }
+
+    .skill-symbol {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 15px;
+        transition: transform 0.35s ease;
+    }
+
+    .skill-item:hover .skill-symbol {
+        transform: rotate(-8deg) scale(1.05);
+    }
+
+    .teach-symbol {
+        background: linear-gradient(135deg, #eee9ff, #ddd2ff);
+        color: #7257c7;
+    }
+
+    .learn-symbol {
+        background: linear-gradient(135deg, #fcecf3, #fbdce8);
+        color: #c15b82;
+    }
+
+    .skill-name {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: #363246;
+        margin-bottom: 4px;
+        letter-spacing: -0.1px;
+    }
+
+    .skill-category {
+        font-size: 11.5px;
+        color: #9a95a8;
+        font-weight: 500;
+    }
+
+    .skill-category i {
+        margin-right: 4px;
+        color: #b8b1c8;
+    }
+
+    /* ============ TYPE BADGE ============ */
+    .type-badge {
+        padding: 7px 13px;
+        border-radius: 50px;
+        font-size: 10.5px;
+        font-weight: 800;
+        white-space: nowrap;
+        letter-spacing: 0.3px;
+        transition: transform 0.3s ease;
+    }
+
+    .skill-item:hover .type-badge {
+        transform: scale(1.05);
+    }
+
+    .teach-badge {
+        background: #eee9ff;
+        color: #7257c7;
+        border: 1px solid #ddd2ff;
+    }
+
+    .learn-badge {
+        background: #fcecf3;
+        color: #c15b82;
+        border: 1px solid #fbdce8;
+    }
+
+    /* ============ EMPTY STATE ============ */
+    .empty-box {
+        text-align: center;
+        padding: 50px 24px;
+        background: linear-gradient(160deg, #fbfaff 0%, #f7f5ff 100%);
+        border: 1.5px dashed #ddd8e9;
+        border-radius: 22px;
+        transition: border-color 0.3s ease;
+    }
+
+    .learn-panel .empty-box {
+        background: linear-gradient(160deg, #fffafc 0%, #fff5f8 100%);
+        border-color: #f0d6e0;
+    }
+
+    .empty-icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 18px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #eee9ff, #ddd2ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        box-shadow: 0 10px 25px rgba(118, 88, 201, 0.18);
+        transition: transform 0.4s ease;
+    }
+
+    .learn-panel .empty-icon {
+        background: linear-gradient(135deg, #fcecf3, #fbdce8);
+        box-shadow: 0 10px 25px rgba(193, 91, 130, 0.18);
+    }
+
+    .empty-box:hover .empty-icon {
+        transform: translateY(-4px) rotate(-6deg);
+    }
+
+    .empty-box h4 {
+        font-size: 15px;
+        color: #464052;
+        margin-bottom: 7px;
+        font-weight: 800;
+        letter-spacing: -0.1px;
+    }
+
+    .empty-box p {
+        color: #aaa5b6;
+        font-size: 12.5px;
+        margin: 0;
+        line-height: 1.65;
+        max-width: 240px;
+        margin-inline: auto;
+    }
+
+    /* ============ ADD BUTTON ============ */
+    .add-area {
+        margin-top: 22px;
+        padding-top: 22px;
+        border-top: 1px solid #f2eff9;
+    }
+
+    .add-btn {
+        width: 100%;
+        text-decoration: none;
+        padding: 14px 20px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        font-size: 13.5px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .add-btn::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .add-btn:hover::after {
+        transform: translateX(100%);
+    }
+
+    .teach-btn {
+        background: linear-gradient(135deg, #7658c9, #6349b8);
+        color: white;
+        box-shadow: 0 8px 20px rgba(118, 88, 201, 0.25);
+    }
+
+    .teach-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(118, 88, 201, 0.35);
+    }
+
+    .learn-btn {
+        background: linear-gradient(135deg, #c15b82, #b34d74);
+        color: white;
+        box-shadow: 0 8px 20px rgba(193, 91, 130, 0.22);
+    }
+
+    .learn-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(193, 91, 130, 0.32);
+    }
+
+    /* ============ BACK BUTTON ============ */
+    .back-area {
+        text-align: center;
+        margin-top: 42px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 24px;
+        border-radius: 50px;
+        background: #ffffff;
+        border: 1px solid #e5e0ef;
+        color: #625b73;
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 14px rgba(55, 43, 91, 0.05);
+    }
+
+    .back-btn:hover {
+        background: #f3effb;
+        color: #6750ae;
+        border-color: #d8cff0;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(118, 88, 201, 0.15);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 850px) {
+        .skill-columns { grid-template-columns: 1fr; }
+        .page-heading h1 { font-size: 42px; }
+        .skills-page { padding: 50px 18px 60px; }
+    }
+
+    @media (max-width: 500px) {
+        .skills-page { padding: 35px 15px 50px; }
+        .page-heading { margin-bottom: 38px; }
+        .page-heading h1 { font-size: 34px; }
+        .page-heading p { font-size: 14px; }
+
+        .skill-panel {
+            padding: 22px 20px;
+            border-radius: 22px;
+        }
+
+        .panel-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 19px;
+            border-radius: 15px;
+        }
+
+        .panel-title h2 { font-size: 17px; }
+        .panel-title p { font-size: 11.5px; }
+
+        .type-badge { display: none; }
+        .skill-item { padding: 14px 15px; }
+        .skill-symbol { width: 38px; height: 38px; }
+        .skill-name { font-size: 13.5px; }
+
+        .empty-box { padding: 40px 20px; }
+        .empty-icon { width: 62px; height: 62px; font-size: 26px; }
+    }
+</style>
+
+
+<div class="skills-page">
+
+    <div class="skills-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-heading">
+
+            <div class="small-heading">
+                ✦ Skill Studio
+            </div>
+
+            <h1>
+                My <span>Skills</span>
+            </h1>
+
+            <p>
+                Share what you know, discover what you want to learn,
+                and connect with students through skill exchange.
+            </p>
+
+        </div>
+
+
+        <!-- TWO COLUMNS -->
+        <div class="skill-columns">
+
+
+            <!-- ================================= -->
+            <!-- TEACHING SKILLS -->
+            <!-- ================================= -->
+
+            <div class="skill-panel teach-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-title-area">
+
+                        <div class="panel-icon teach-icon">
+                            <i class="fas fa-chalkboard-user"></i>
+                        </div>
+
+                        <div class="panel-title">
+                            <h2>I Can Teach</h2>
+                            <p>Skills you can share</p>
+                        </div>
+
+                    </div>
+
+                    <div class="skill-count teach-count">
+                        {{ teach_count }}
+                    </div>
+
+                </div>
+
+
+                <div class="skill-list">
+
+                    {% for item in teaching_skills %}
+
+                        <div class="skill-item">
+
+                            <div class="skill-left">
+
+                                <div class="skill-symbol teach-symbol">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+
+                                <div>
+                                    <div class="skill-name">
+                                        {{ item.skill.name }}
+                                    </div>
+                                    <div class="skill-category">
+                                        <i class="fas fa-tag"></i>
+                                        {{ item.skill.category }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <span class="type-badge teach-badge">
+                                <i class="fas fa-check me-1"></i>
+                                Teach
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-box">
+                            <div class="empty-icon">💡</div>
+                            <h4>No teaching skills yet</h4>
+                            <p>Add a skill you know and help another student learn it.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="add-area">
+                    <a href="{% url 'add_skill' %}" class="add-btn teach-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Teaching Skill
+                    </a>
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================= -->
+            <!-- LEARNING SKILLS -->
+            <!-- ================================= -->
+
+            <div class="skill-panel learn-panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-title-area">
+
+                        <div class="panel-icon learn-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+
+                        <div class="panel-title">
+                            <h2>I Want to Learn</h2>
+                            <p>Skills you want to discover</p>
+                        </div>
+
+                    </div>
+
+                    <div class="skill-count learn-count">
+                        {{ learn_count }}
+                    </div>
+
+                </div>
+
+
+                <div class="skill-list">
+
+                    {% for item in learning_skills %}
+
+                        <div class="skill-item">
+
+                            <div class="skill-left">
+
+                                <div class="skill-symbol learn-symbol">
+                                    <i class="fas fa-star"></i>
+                                </div>
+
+                                <div>
+                                    <div class="skill-name">
+                                        {{ item.skill.name }}
+                                    </div>
+                                    <div class="skill-category">
+                                        <i class="fas fa-tag"></i>
+                                        {{ item.skill.category }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <span class="type-badge learn-badge">
+                                <i class="fas fa-heart me-1"></i>
+                                Learn
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty-box">
+                            <div class="empty-icon">🌱</div>
+                            <h4>No learning skills yet</h4>
+                            <p>Add something you want to learn from another student.</p>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="add-area">
+                    <a href="{% url 'add_skill' %}" class="add-btn learn-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Learning Skill
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BACK TO DASHBOARD -->
+        <div class="back-area">
+            <a href="{% url 'dashboard' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

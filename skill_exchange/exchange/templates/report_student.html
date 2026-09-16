@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}
+Report Student
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+
+      <div class="card border-0 shadow-lg" style="border-radius: 28px; overflow: hidden;">
+
+        <!-- Accent bar at top -->
+        <div style="height: 6px; background: linear-gradient(90deg, #f59e0b, #ef4444, #dc2626);"></div>
+
+        <div class="card-body p-4 p-md-5">
+
+          <!-- Header -->
+          <div class="text-center mb-4">
+
+            <div class="d-inline-flex align-items-center justify-content-center mb-3"
+                 style="width: 85px; height: 85px;
+                        background: linear-gradient(135deg, #fff5f5, #fee2e2);
+                        border-radius: 50%;
+                        border: 2px solid rgba(239, 68, 68, 0.25);
+                        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.12);">
+              <span style="font-size: 42px; line-height: 1;">⚠️</span>
+            </div>
+
+            <h2 class="fw-bold mb-2" style="color: #1e2b4a; letter-spacing: -0.02em;">
+              Report Student
+            </h2>
+
+            <p class="text-muted mb-0" style="font-size: 1.05rem;">
+              You are reporting
+              <strong style="color: #1e2b4a; background: #eef2ff; padding: 0.15rem 0.9rem; border-radius: 40px;">
+                {{ student.user.username }}
+              </strong>
+            </p>
+
+          </div>
+
+          <!-- Divider -->
+          <hr style="border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.25), transparent); margin: 1.5rem 0;">
+
+          <!-- Form -->
+          <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-4">
+
+              <label class="form-label fw-bold d-flex align-items-center gap-2"
+                     style="color: #1e2b4a; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.03em;">
+                <i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>
+                Reason for Report
+              </label>
+
+              <textarea
+                name="reason"
+                class="form-control"
+                rows="5"
+                placeholder="Please describe the reason for reporting this student..."
+                required
+                style="border-radius: 16px;
+                       border: 1.5px solid #e2e8f5;
+                       padding: 1rem 1.2rem;
+                       font-size: 0.98rem;
+                       resize: vertical;
+                       transition: all 0.2s ease;
+                       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);"
+                onfocus="this.style.borderColor='#ef4444'; this.style.boxShadow='0 0 0 4px rgba(239, 68, 68, 0.1)';"
+                onblur="this.style.borderColor='#e2e8f5'; this.style.boxShadow='0 2px 6px rgba(0, 0, 0, 0.02)';"
+              ></textarea>
+
+              <div class="form-text mt-2" style="color: #94a3b8; font-size: 0.82rem;">
+                <i class="fas fa-info-circle me-1"></i>
+                Your report will be reviewed by the moderation team.
+              </div>
+
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-flex gap-3 mt-4">
+
+              <a
+                href="{% url 'student_profile' student.id %}"
+                class="btn w-50 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                style="border-radius: 50px;
+                       padding: 0.85rem 1rem;
+                       background: #f1f5f9;
+                       color: #475569;
+                       border: 1.5px solid #e2e8f5;
+                       transition: all 0.2s ease;"
+                onmouseover="this.style.background='#e2e8f0'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.06)';"
+                onmouseout="this.style.background='#f1f5f9'; this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+              >
+                <i class="fas fa-arrow-left"></i>
+                Cancel
+              </a>
+
+              <button
+                type="submit"
+                class="btn w-50 fw-bold d-flex align-items-center justify-content-center gap-2"
+                style="border-radius: 50px;
+                       padding: 0.85rem 1rem;
+                       background: linear-gradient(135deg, #ef4444, #dc2626);
+                       color: white;
+                       border: none;
+                       box-shadow: 0 10px 22px -8px rgba(239, 68, 68, 0.55);
+                       transition: all 0.25s ease;"
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 16px 28px -10px rgba(239, 68, 68, 0.7)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 22px -8px rgba(239, 68, 68, 0.55)';"
+              >
+                <i class="fas fa-flag"></i>
+                Submit Report
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

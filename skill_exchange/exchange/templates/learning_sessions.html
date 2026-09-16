@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Learning Sessions</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #eef2f7 0%,
+                    #f9fcff 100%
+                );
+
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+
+            color: #1a2639;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* BACK BUTTON */
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+
+            background: #ffffff;
+            color: #2d3a5e;
+
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+
+            padding: 0.7rem 1.6rem;
+            border-radius: 60px;
+
+            box-shadow:
+                0 6px 16px rgba(0, 20, 40, 0.06);
+
+            border: 1px solid rgba(102, 126, 234, 0.15);
+
+            transition: all 0.25s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            color: #2d3a5e;
+        }
+
+        /* HEADER */
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+
+            color: #1e2b4a;
+        }
+
+        h1::after {
+            content: '';
+
+            display: block;
+
+            width: 80px;
+            height: 5px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #667eea,
+                    #a3b6f0
+                );
+
+            border-radius: 10px;
+
+            margin: 0.6rem auto 0;
+        }
+
+        /* SESSION CARD */
+
+        .session-card {
+            background: rgba(255, 255, 255, 0.95);
+
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.8rem;
+
+            border-radius: 28px;
+
+            box-shadow:
+                0 12px 32px -8px rgba(28, 45, 85, 0.12),
+                0 4px 12px rgba(0, 0, 0, 0.02);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+
+            transition: all 0.25s ease;
+        }
+
+        .session-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 28px 40px -12px rgba(50, 65, 110, 0.2);
+        }
+
+        /* TITLE */
+
+        .session-card h3 {
+            font-size: 1.65rem;
+            font-weight: 700;
+
+            color: #0f1a30;
+
+            margin-bottom: 1rem;
+
+            display: flex;
+            align-items: center;
+
+            gap: 0.6rem;
+
+            border-left: 6px solid #667eea;
+
+            padding-left: 1rem;
+        }
+
+        /* DETAILS */
+
+        .session-card p {
+            display: flex;
+            flex-wrap: wrap;
+
+            align-items: baseline;
+
+            gap: 0.4rem 0.8rem;
+
+            margin: 0.7rem 0;
+
+            font-size: 1rem;
+
+            color: #28344e;
+
+            border-bottom: 1px dashed rgba(102, 126, 234, 0.12);
+
+            padding-bottom: 0.55rem;
+        }
+
+        .session-card p strong {
+            font-weight: 600;
+
+            color: #2d3a5e;
+
+            min-width: 100px;
+
+            font-size: 0.9rem;
+
+            text-transform: uppercase;
+        }
+
+        /* MEETING LINK */
+
+        .meeting-link {
+            color: #4f6cdb;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            background: rgba(102, 126, 234, 0.1);
+
+            padding: 0.2rem 0.8rem;
+
+            border-radius: 40px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 0.4rem;
+
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .meeting-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* STATUS */
+
+        .status {
+            display: inline-block;
+
+            padding: 0.35rem 1.2rem;
+
+            border-radius: 40px;
+
+            font-size: 0.85rem;
+
+            font-weight: 600;
+
+            border: 1px solid;
+
+            text-transform: capitalize;
+        }
+
+        .status-pending {
+            background: #fff7ed;
+            color: #9a3412;
+            border-color: #fed7aa;
+        }
+
+        .status-accepted {
+            background: #ecfdf5;
+            color: #166534;
+            border-color: #86efac;
+        }
+
+        .status-rejected {
+            background: #fef2f2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+
+        /* ACTIONS */
+
+        .session-actions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 1.2rem;
+
+            padding-top: 1rem;
+
+            border-top:
+                1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .action-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 10px 20px;
+
+            border-radius: 50px;
+
+            text-decoration: none;
+
+            font-size: 0.9rem;
+
+            font-weight: 600;
+
+            transition: all 0.25s ease;
+
+            border: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* ACCEPT */
+
+        .accept-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #22c55e
+                );
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(22, 163, 74, 0.25);
+        }
+
+        /* REJECT */
+
+        .reject-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #dc2626,
+                    #ef4444
+                );
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(220, 38, 38, 0.22);
+        }
+
+        /* JOIN */
+
+        .join-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(99, 102, 241, 0.25);
+        }
+
+        /* CANCEL */
+
+        .cancel-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #dc2626,
+                    #b91c1c
+                );
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(220, 38, 38, 0.25);
+        }
+
+        .cancel-btn:hover {
+            color: white;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 24px rgba(220, 38, 38, 0.35);
+        }
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            background: white;
+
+            padding: 4rem 2rem;
+
+            border-radius: 36px;
+
+            box-shadow:
+                0 20px 40px -12px rgba(30, 45, 80, 0.15);
+
+            max-width: 560px;
+
+            margin: 2rem auto;
+        }
+
+        .empty h3 {
+            font-size: 1.8rem;
+
+            color: #1e2b4a;
+
+            margin-bottom: 1rem;
+        }
+
+        .empty p {
+            color: #55688b;
+            font-size: 1.1rem;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .session-card {
+                padding: 1.4rem;
+            }
+
+            .session-card h3 {
+                font-size: 1.35rem;
+            }
+
+            .session-card p {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .session-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- BACK BUTTON -->
+
+    <a href="{% url 'dashboard' %}" class="back-btn">
+
+        <i class="fas fa-arrow-left"></i>
+
+        Back to Dashboard
+
+    </a>
+
+
+    <!-- PAGE TITLE -->
+
+    <h1>
+        Learning Sessions
+    </h1>
+
+
+    {% if sessions %}
+
+        {% for session in sessions %}
+
+        <div class="session-card">
+
+
+            <!-- SESSION TITLE -->
+
+            <h3>
+
+                <i class="fas fa-chalkboard-user"
+                   style="color: #667eea;">
+
+                </i>
+
+                {{ session.title }}
+
+            </h3>
+
+
+            <!-- FROM -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-user-graduate"
+                       style="color: #667eea;">
+                    </i>
+
+                    From:
+                </strong>
+
+                {{ session.sender.user.username }}
+
+            </p>
+
+
+            <!-- TO -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-user-check"
+                       style="color: #667eea;">
+                    </i>
+
+                    To:
+                </strong>
+
+                {{ session.receiver.user.username }}
+
+            </p>
+
+
+            <!-- DESCRIPTION -->
+
+            {% if session.description %}
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-align-left"
+                       style="color: #667eea;">
+                    </i>
+
+                    Description:
+                </strong>
+
+                {{ session.description }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- DATE -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-calendar-alt"
+                       style="color: #667eea;">
+                    </i>
+
+                    Date:
+                </strong>
+
+                {{ session.session_date }}
+
+            </p>
+
+
+            <!-- TIME -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-clock"
+                       style="color: #667eea;">
+                    </i>
+
+                    Time:
+                </strong>
+
+                {{ session.session_time }}
+
+            </p>
+
+
+            <!-- DURATION -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-hourglass-half"
+                       style="color: #667eea;">
+                    </i>
+
+                    Duration:
+                </strong>
+
+                {{ session.duration }} minutes
+
+            </p>
+
+
+            <!-- MEETING -->
+
+            {% if session.meeting_link %}
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-video"
+                       style="color: #667eea;">
+                    </i>
+
+                    Meeting:
+                </strong>
+
+                {% if session.status == "accepted" %}
+
+                    <a href="{{ session.meeting_link }}"
+                       target="_blank"
+                       class="meeting-link">
+
+                        <i class="fas fa-external-link-alt"></i>
+
+                        Join Session
+
+                    </a>
+
+                {% else %}
+
+                    <span style="color: #64748b;">
+                        Available after acceptance
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- STATUS -->
+
+            <p>
+
+                <strong>
+                    <i class="fas fa-circle-info"
+                       style="color: #667eea;">
+                    </i>
+
+                    Status:
+                </strong>
+
+
+                {% if session.status == "pending" %}
+
+                    <span class="status status-pending">
+                        Pending
+                    </span>
+
+                {% elif session.status == "accepted" %}
+
+                    <span class="status status-accepted">
+                        Accepted
+                    </span>
+
+                {% elif session.status == "rejected" %}
+
+                    <span class="status status-rejected">
+                        Rejected
+                    </span>
+
+                {% elif session.status == "cancelled" %}
+
+                    <span class="status status-rejected">
+                        Cancelled
+                    </span>
+
+                {% else %}
+
+                    <span class="status">
+                        {{ session.get_status_display }}
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+
+            <!-- ACCEPT / REJECT -->
+
+            {% if session.receiver.user == request.user and session.status == "pending" %}
+
+            <div class="session-actions">
+
+                <a href="{% url 'accept_session' session.id %}"
+                   class="action-btn accept-btn">
+
+                    <i class="fas fa-check"></i>
+
+                    Accept Session
+
+                </a>
+
+
+                <a href="{% url 'reject_session' session.id %}"
+                   class="action-btn reject-btn">
+
+                    <i class="fas fa-times"></i>
+
+                    Reject Session
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- JOIN SESSION -->
+
+            {% if session.status == "accepted" and session.meeting_link %}
+
+            <div class="session-actions">
+
+                <a href="{{ session.meeting_link }}"
+                   target="_blank"
+                   class="action-btn join-btn">
+
+                    <i class="fas fa-video"></i>
+
+                    Join Session
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- CANCEL SESSION -->
+
+            {% if session.status == "accepted" %}
+
+            <div class="session-actions">
+
+                <a href="{% url 'cancel_session' session.id %}"
+                   class="action-btn cancel-btn">
+
+                    <i class="fas fa-times-circle"></i>
+
+                    Cancel Session
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty">
+
+            <h3>
+
+                <i class="fas fa-calendar-times"></i>
+
+                No Learning Sessions
+
+            </h3>
+
+            <p>
+                You don't have any learning sessions yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+
+</html>

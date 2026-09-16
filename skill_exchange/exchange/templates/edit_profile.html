@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile · Pro</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font for a premium feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        /* ----- main card – glassmorphism + elevation ----- */
+        .pro-card {
+            border: none;
+            border-radius: 32px;
+            background: #ffffff;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 12px 24px -6px rgba(0, 0, 0, 0.08),
+                0 30px 60px -12px rgba(50, 50, 93, 0.15);
+            overflow: hidden;
+            transition: box-shadow 0.35s ease, transform 0.35s ease;
+        }
+
+        .pro-card:hover {
+            box-shadow:
+                0 8px 12px -2px rgba(0, 0, 0, 0.08),
+                0 20px 36px -8px rgba(0, 0, 0, 0.12),
+                0 40px 80px -16px rgba(50, 50, 93, 0.2);
+            transform: translateY(-6px);
+        }
+
+        /* ----- header – deep gradient + glass texture ----- */
+        .pro-header {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+            padding: 2.5rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pro-header::before {
+            content: "";
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(102, 126, 234, 0.18) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.15) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .pro-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+            background-size: 300% 100%;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .pro-header h2 {
+            font-weight: 700;
+            font-size: 1.85rem;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .pro-header p {
+            font-weight: 400;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.3px;
+        }
+
+        /* ----- form body ----- */
+        .pro-body {
+            padding: 2.5rem 2.5rem 2rem;
+            background: #ffffff;
+        }
+
+        /* ----- labels with modern accent ----- */
+        .pro-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #4a5568;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pro-label i {
+            color: #667eea;
+            font-size: 0.85rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* ----- inputs & textarea – refined ----- */
+        .pro-input,
+        .pro-textarea,
+        .pro-file {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 0.8rem 1.1rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: #fafbfc;
+            transition: all 0.25s ease;
+            color: #1a202c;
+            font-weight: 450;
+        }
+
+        .pro-input:focus,
+        .pro-textarea:focus {
+            border-color: #667eea;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+            outline: none;
+        }
+
+        .pro-input:disabled {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #718096;
+            cursor: not-allowed;
+            border-radius: 14px;
+            padding: 0.8rem 1.1rem;
+            font-size: 0.95rem;
+        }
+
+        .pro-textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .pro-file {
+            padding: 0.6rem 0.8rem;
+            cursor: pointer;
+        }
+
+        .pro-file::file-selector-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.45rem 1.1rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-right: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pro-file::file-selector-button:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a3f8f);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+        }
+
+        /* ----- helper text ----- */
+        .pro-hint {
+            font-size: 0.78rem;
+            color: #a0aec0;
+            margin-top: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .pro-hint i {
+            font-size: 0.7rem;
+            color: #cbd5e0;
+        }
+
+        /* ----- profile picture preview ----- */
+        .pro-avatar {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2), 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pro-avatar:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ----- buttons – pro level ----- */
+        .pro-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            border-radius: 50px;
+            padding: 0.8rem 2.2rem;
+            font-weight: 600;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pro-btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #ffffff;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        .pro-btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .pro-btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .pro-btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a3f8f);
+            box-shadow: 0 10px 28px rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        .pro-btn-secondary {
+            background: transparent;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .pro-btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            color: #1a202c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ----- decorative divider ----- */
+        .pro-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 1.8rem 0;
+        }
+
+        /* ----- responsive tweaks ----- */
+        @media (max-width: 576px) {
+            .pro-body {
+                padding: 1.8rem 1.3rem;
+            }
+            .pro-header {
+                padding: 1.8rem 1.3rem 1.5rem;
+            }
+            .pro-header h2 {
+                font-size: 1.5rem;
+            }
+            .pro-btn {
+                padding: 0.7rem 1.6rem;
+                font-size: 0.85rem;
+            }
+            .pro-avatar {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        /* ----- subtle animation on form elements ----- */
+        .pro-field {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .pro-field:nth-child(1) { animation-delay: 0.05s; }
+        .pro-field:nth-child(2) { animation-delay: 0.1s; }
+        .pro-field:nth-child(3) { animation-delay: 0.15s; }
+        .pro-field:nth-child(4) { animation-delay: 0.2s; }
+        .pro-field:nth-child(5) { animation-delay: 0.25s; }
+        .pro-field:nth-child(6) { animation-delay: 0.3s; }
+        .pro-field:nth-child(7) { animation-delay: 0.35s; }
+        .pro-field:nth-child(8) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7 col-xl-6">
+
+            <!-- ===== PRO CARD ===== -->
+            <div class="pro-card">
+
+                <!-- ===== HEADER ===== -->
+                <div class="pro-header text-center">
+                    <h2 class="fw-bold mb-1">
+                        <i class="fas fa-pen-fancy me-2" style="font-size:1.5rem; opacity:0.9;"></i>
+                        Edit Profile
+                    </h2>
+                    <p class="mb-0">Update your profile information</p>
+                </div>
+
+                <!-- ===== FORM BODY ===== -->
+                <div class="pro-body">
+
+                    <form method="POST" enctype="multipart/form-data">
+                        <!-- CSRF – preserved exactly -->
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+                        <!-- ===== Username ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input type="text"
+                                   class="pro-input"
+                                   value="{{ student_profile.user.username }}"
+                                   disabled>
+                            <div class="pro-hint">
+                                <i class="fas fa-lock"></i>
+                                Username cannot be changed here.
+                            </div>
+                        </div>
+
+                        <!-- ===== Email ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email"
+                                   class="pro-input"
+                                   value="{{ student_profile.user.email }}"
+                                   disabled>
+                        </div>
+
+                        <!-- ===== Profile Picture ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-camera"></i> Profile Picture
+                            </label>
+
+                            {% if student_profile.profile_picture %}
+                                <div class="mb-3 d-flex align-items-center gap-3">
+                                    <img src="{{ student_profile.profile_picture.url }}"
+                                         alt="Profile Picture"
+                                         class="pro-avatar">
+                                    <span class="pro-hint" style="margin-top:0;">
+                                        <i class="fas fa-check-circle" style="color:#48bb78;"></i>
+                                        Current picture
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <input type="file"
+                                   name="profile_picture"
+                                   class="pro-file"
+                                   accept="image/*">
+
+                            <div class="pro-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Upload a profile picture (JPG, PNG, etc.)
+                            </div>
+                        </div>
+
+                        <!-- ===== Phone ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-phone-alt"></i> Phone Number
+                            </label>
+                            <input type="text"
+                                   name="phone"
+                                   class="pro-input"
+                                   value="{{ student_profile.phone }}"
+                                   placeholder="Enter your phone number">
+                        </div>
+
+                        <!-- ===== Education ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-graduation-cap"></i> Education
+                            </label>
+                            <input type="text"
+                                   name="education"
+                                   class="pro-input"
+                                   value="{{ student_profile.education }}"
+                                   placeholder="Example: MCA">
+                        </div>
+
+                        <!-- ===== Location ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-map-marker-alt"></i> Location
+                            </label>
+                            <input type="text"
+                                   name="location"
+                                   class="pro-input"
+                                   value="{{ student_profile.location }}"
+                                   placeholder="Enter your location">
+                        </div>
+
+                        <!-- ===== Bio ===== -->
+                        <div class="pro-field mb-4">
+                            <label class="pro-label">
+                                <i class="fas fa-align-left"></i> About Me
+                            </label>
+                            <textarea name="bio"
+                                      class="pro-textarea"
+                                      rows="5"
+                                      placeholder="Tell something about yourself">{{ student_profile.bio }}</textarea>
+                        </div>
+
+                        <!-- ===== divider ===== -->
+                        <div class="pro-divider"></div>
+
+                        <!-- ===== Buttons ===== -->
+                        <div class="pro-field text-center d-flex flex-wrap justify-content-center gap-3">
+                            <a href="{% url 'profile' %}"
+                               class="pro-btn pro-btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+
+                            <button type="submit"
+                                    class="pro-btn pro-btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+                </div> <!-- end pro-body -->
+            </div> <!-- end pro-card -->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div> <!-- end container -->
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

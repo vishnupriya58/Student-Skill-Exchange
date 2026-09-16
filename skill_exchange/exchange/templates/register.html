@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Student Skill Exchange</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 24px;
+            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card-body {
+            padding: 2.5rem 2rem;
+        }
+
+        .brand-icon {
+            font-size: 3rem;
+            color: #4a3f7a;
+            background: rgba(74, 63, 122, 0.12);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #2d2b4e;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #5a5580;
+            font-size: 0.95rem;
+            margin-top: -0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 40px;
+            padding: 12px 20px;
+            border: 1px solid #d8d4e8;
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: #6c63b0;
+            box-shadow: 0 0 0 4px rgba(108, 99, 176, 0.25);
+            background: #fff;
+        }
+
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: #6c63b0;
+            padding-right: 0;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            padding-left: 0.5rem;
+        }
+
+        .input-group .input-group-text i {
+            font-size: 1.1rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c63b0, #4a3f7a);
+            border: none;
+            border-radius: 40px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 16px rgba(74, 63, 122, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 24px rgba(74, 63, 122, 0.45);
+            background: linear-gradient(135deg, #5a52a0, #3b3170);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .login-link {
+            color: #4a3f7a;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .login-link:hover {
+            border-bottom-color: #4a3f7a;
+            color: #2d2b4e;
+        }
+
+        .register-footer {
+            font-size: 0.95rem;
+            color: #4d4970;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #3d3a5c;
+            margin-left: 0.25rem;
+        }
+
+        @media (max-width: 576px) {
+
+            .card-body {
+                padding: 1.8rem 1.2rem;
+            }
+
+            .brand-icon {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-6 col-md-8 col-sm-10">
+
+                <div class="card shadow-lg">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <!-- Header -->
+                        <div class="text-center">
+
+                            <span class="brand-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </span>
+
+                            <h2 class="mt-2">
+                                Join the Exchange
+                            </h2>
+
+                            <p class="subtitle">
+                                Create your student account
+                            </p>
+
+                        </div>
+
+
+                        <!-- Registration Form -->
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+
+                            <!-- Username -->
+                            <div class="mb-3">
+
+                                <label class="form-label" for="username">
+                                    <i class="fas fa-user me-1" style="color:#6c63b0;"></i>
+                                    Username
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+
+                                    <input type="text"
+                                           name="username"
+                                           id="username"
+                                           class="form-control"
+                                           placeholder="Choose a username"
+                                           required
+                                           autofocus>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="mb-3">
+
+                                <label class="form-label" for="email">
+                                    <i class="fas fa-envelope me-1" style="color:#6c63b0;"></i>
+                                    Email
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+
+                                    <input type="email"
+                                           name="email"
+                                           id="email"
+                                           class="form-control"
+                                           placeholder="your@email.com"
+                                           required>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Password -->
+                            <div class="mb-4">
+
+                                <label class="form-label" for="password">
+                                    <i class="fas fa-lock me-1" style="color:#6c63b0;"></i>
+                                    Password
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="fas fa-key"></i>
+                                    </span>
+
+                                    <input type="password"
+                                           name="password"
+                                           id="password"
+                                           class="form-control"
+                                           placeholder="Min 8 characters"
+                                           required>
+
+                                </div>
+
+                                <div class="form-text text-end mt-1"
+                                     style="font-size:0.8rem; color:#6c63b0;">
+
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Strong password recommended
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Register Button -->
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+
+                                <i class="fas fa-user-plus me-2"></i>
+                                Register
+
+                            </button>
+
+                        </form>
+
+
+                        <!-- Login Link -->
+                        <p class="text-center mt-4 register-footer">
+
+                            Already have an account?
+
+                            <a href="{% url 'login' %}"
+                               class="login-link">
+
+                                <i class="fas fa-arrow-right me-1"></i>
+                                Login
+
+                            </a>
+
+                        </p>
+
+
+                        <!-- Divider -->
+                        <div class="d-flex align-items-center my-3">
+
+                            <hr class="flex-grow-1"
+                                style="border-color:#d8d4e8;" />
+
+                            <span class="mx-2 text-muted"
+                                  style="font-size:0.8rem; font-weight:500;">
+
+                                OR
+
+                            </span>
+
+                            <hr class="flex-grow-1"
+                                style="border-color:#d8d4e8;" />
+
+                        </div>
+
+
+                        <!-- Social Links -->
+                        <div class="text-center small">
+
+                            <span class="text-muted">
+                                Join with
+                            </span>
+
+                            <a href="#"
+                               class="text-decoration-none mx-2"
+                               style="color:#4267B2;">
+
+                                <i class="fab fa-facebook-f fa-lg"></i>
+
+                            </a>
+
+                            <a href="#"
+                               class="text-decoration-none mx-2"
+                               style="color:#1DA1F2;">
+
+                                <i class="fab fa-twitter fa-lg"></i>
+
+                            </a>
+
+                            <a href="#"
+                               class="text-decoration-none mx-2"
+                               style="color:#ea4335;">
+
+                                <i class="fab fa-google fa-lg"></i>
+
+                            </a>
+
+                            <a href="#"
+                               class="text-decoration-none mx-2"
+                               style="color:#0A66C2;">
+
+                                <i class="fab fa-linkedin-in fa-lg"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Footer -->
+                <p class="text-center text-white-50 mt-3 small">
+
+                    <i class="fas fa-graduation-cap me-1"></i>
+                    Student Skill Exchange &bull; learn &amp; share
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

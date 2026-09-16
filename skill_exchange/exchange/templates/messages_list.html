@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Messages</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f6f8ff, #f0f3fe);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .messages-container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        }
+
+        .messages-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .messages-title h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #252943;
+        }
+
+        .messages-title h2 i {
+            color: #667eea;
+        }
+
+        .messages-title p {
+            margin-top: 8px;
+            color: #777;
+        }
+
+        .conversation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 22px;
+            margin-bottom: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+
+            transition: 0.3s;
+        }
+
+        .conversation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.18);
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .student-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+
+            background: linear-gradient(135deg, #667eea, #764ba2);
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .student-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #252943;
+            margin-bottom: 5px;
+        }
+
+        .student-info small {
+            color: #888;
+        }
+
+        .chat-btn {
+            text-decoration: none;
+
+            background: linear-gradient(135deg, #667eea, #764ba2);
+
+            color: white;
+
+            padding: 10px 20px;
+
+            border-radius: 25px;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+        }
+
+        .chat-btn:hover {
+            color: white;
+            transform: scale(1.03);
+        }
+
+        .empty-message {
+            text-align: center;
+            background: white;
+            padding: 50px 25px;
+            border-radius: 25px;
+        }
+
+        .empty-message i {
+            font-size: 45px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .empty-message h4 {
+            font-size: 22px;
+            color: #252943;
+            margin-bottom: 10px;
+        }
+
+        .empty-message p {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+
+            .messages-container {
+                padding: 20px;
+            }
+
+            .conversation-card {
+                padding: 15px;
+            }
+
+            .chat-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .student-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="messages-container">
+
+    <div class="messages-title">
+
+        <h2>
+            <i class="fas fa-comment-dots"></i>
+            Messages
+        </h2>
+
+        <p>Your conversations</p>
+
+    </div>
+
+
+    {% for student in students %}
+
+    <div class="conversation-card">
+
+        <div class="student-info">
+
+            <div class="student-icon">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div>
+
+                <div class="student-name">
+                    {{ student.user.username }}
+                </div>
+
+                <small>
+                    Start chatting with {{ student.user.username }}
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'messages' student.id %}"
+           class="chat-btn">
+
+            Open Chat
+            <i class="fas fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+    {% empty %}
+
+    <div class="empty-message">
+
+        <i class="fas fa-comments"></i>
+
+        <h4>No conversations yet</h4>
+
+        <p>
+            You don't have any messages yet.
+        </p>
+
+        <a href="{% url 'find_students' %}"
+           class="chat-btn">
+
+            <i class="fas fa-user-plus"></i>
+            Find Students
+
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

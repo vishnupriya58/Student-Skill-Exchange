@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard · Skill Exchange</title>
+
+<!-- Google Fonts + Font Awesome -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+<style>
+
+    /* ----- GLOBAL RESET & FONTS ----- */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f4f6fb;
+
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.07) 0%, transparent 40%),
+            radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+
+        min-height: 100vh;
+        padding: 3rem 1rem 4rem;
+        color: #0f172a;
+    }
+
+    /* ----- WRAPPER ----- */
+
+    .dash-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* ----- WELCOME HERO ----- */
+
+    .welcome-hero {
+        position: relative;
+
+        background:
+            linear-gradient(
+                135deg,
+                #4338ca 0%,
+                #6366f1 35%,
+                #8b5cf6 70%,
+                #d946ef 100%
+            );
+
+        border-radius: 28px;
+        padding: 3rem 2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        overflow: hidden;
+
+        box-shadow: 0 20px 50px -12px rgba(99, 102, 241, 0.35);
+    }
+
+    .welcome-hero::before {
+        content: "";
+
+        position: absolute;
+        inset: 0;
+
+        background-image:
+            radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.18) 0%, transparent 40%),
+            radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.12) 0%, transparent 40%);
+
+        pointer-events: none;
+    }
+
+    .welcome-hero::after {
+        content: "";
+
+        position: absolute;
+        inset: 0;
+
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+
+        background-size: 40px 40px;
+
+        mask-image:
+            radial-gradient(circle at 50% 50%, black 20%, transparent 75%);
+
+        -webkit-mask-image:
+            radial-gradient(circle at 50% 50%, black 20%, transparent 75%);
+
+        pointer-events: none;
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-badge-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 92px;
+        height: 92px;
+
+        border-radius: 28px;
+
+        background: rgba(255, 255, 255, 0.18);
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+
+        border: 1px solid rgba(255, 255, 255, 0.28);
+
+        font-size: 2.8rem;
+
+        margin-bottom: 1.25rem;
+
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-title {
+        color: #ffffff;
+
+        font-weight: 800;
+
+        font-size: clamp(1.85rem, 4vw, 2.75rem);
+
+        letter-spacing: -1px;
+
+        margin: 0 0 0.65rem;
+
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-sub {
+        color: rgba(255, 255, 255, 0.95);
+
+        font-size: 1.05rem;
+
+        font-weight: 500;
+
+        max-width: 560px;
+
+        margin: 0 auto 1.75rem;
+
+        line-height: 1.6;
+    }
+
+    /* ----- STAT PILLS ----- */
+
+    .stat-pills {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        gap: 10px;
+    }
+
+    .stat-pill {
+        display: inline-flex;
+        align-items: center;
+
+        gap: 9px;
+
+        padding: 10px 18px;
+
+        border-radius: 50px;
+
+        font-size: 0.88rem;
+
+        font-weight: 700;
+
+        color: #ffffff;
+
+        background: rgba(255, 255, 255, 0.15);
+
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+
+        border: 1px solid rgba(255, 255, 255, 0.22);
+
+        transition: all 0.3s ease;
+    }
+
+    .stat-pill:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-pill .pill-icon {
+        font-size: 1.05rem;
+        line-height: 1;
+    }
+
+    /* ----- DASHBOARD CARDS ----- */
+
+    .dash-card {
+        position: relative;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e8f0;
+
+        border-radius: 22px;
+
+        padding: 2rem 1.75rem 1.75rem;
+
+        height: 100%;
+
+        text-align: center;
+
+        overflow: hidden;
+
+        transition:
+            all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dash-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+        background:
+            var(
+                --card-accent,
+                linear-gradient(90deg, #6366f1, #8b5cf6)
+            );
+    }
+
+    .dash-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .dash-card:hover {
+        transform: translateY(-8px);
+
+        box-shadow:
+            0 30px 60px -15px rgba(15, 23, 42, 0.18);
+
+        border-color: transparent;
+    }
+
+    .dash-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 78px;
+        height: 78px;
+        border-radius: 22px;
+        font-size: 2.2rem;
+        margin: 0 auto 1.1rem;
+        transition: transform 0.4s ease;
+        box-shadow:
+            0 12px 28px -10px rgba(15, 23, 42, 0.15);
+    }
+
+    .dash-card:hover .dash-icon {
+        transform: rotate(-6deg) scale(1.08);
+    }
+
+    .dash-icon.icon-indigo {
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    }
+
+    .dash-icon.icon-pink {
+        background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+    }
+
+    .dash-icon.icon-green {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    }
+
+    .dash-icon.icon-blue {
+        background: linear-gradient(135deg, #ecfeff, #cffafe);
+    }
+
+    .dash-icon.icon-amber {
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    }
+
+    .dash-icon.icon-violet {
+        background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    }
+
+    .dash-title {
+        font-weight: 800;
+
+        color: #0f172a;
+
+        font-size: 1.2rem;
+
+        letter-spacing: -0.3px;
+
+        margin: 0 0 0.6rem;
+    }
+
+    .dash-desc {
+        color: #64748b;
+
+        font-size: 0.9rem;
+
+        line-height: 1.6;
+
+        margin: 0 0 1.1rem;
+
+        flex-grow: 1;
+    }
+
+    /* ----- MINI STATS ----- */
+
+    .mini-stats {
+        display: flex;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        margin-bottom: 1.1rem;
+
+        flex-wrap: wrap;
+    }
+
+    .mini-badge {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 13px;
+
+        border-radius: 50px;
+
+        font-size: 0.75rem;
+
+        font-weight: 700;
+
+        letter-spacing: 0.2px;
+    }
+
+    .mini-badge.pending {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .mini-badge.accepted {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .mini-badge.unread {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    /* ----- STARS ----- */
+
+    .star-row {
+        color: #f59e0b;
+
+        font-size: 1.35rem;
+
+        letter-spacing: 3px;
+
+        margin-bottom: 1.1rem;
+    }
+
+    /* ----- BUTTONS ----- */
+
+    .btn-dash {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        padding: 11px 26px;
+
+        border-radius: 50px;
+
+        font-size: 0.88rem;
+
+        font-weight: 700;
+
+        color: #ffffff;
+
+        border: none;
+
+        text-decoration: none;
+
+        box-shadow:
+            0 8px 20px -6px
+            var(
+                --btn-shadow,
+                rgba(99, 102, 241, 0.5)
+            );
+
+        background:
+            var(
+                --btn-bg,
+                linear-gradient(135deg, #6366f1, #8b5cf6)
+            );
+
+        transition:
+            all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        position: relative;
+
+        overflow: hidden;
+
+        width: 100%;
+    }
+
+    .btn-dash::after {
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        background:
+            linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.28) 50%,
+                transparent 70%
+            );
+
+        transform: translateX(-100%);
+
+        transition: transform 0.6s ease;
+    }
+
+    .btn-dash:hover {
+        color: #ffffff;
+
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 14px 30px -6px
+            var(
+                --btn-shadow,
+                rgba(99, 102, 241, 0.65)
+            );
+    }
+
+    .btn-dash:hover::after {
+        transform: translateX(100%);
+    }
+
+    .btn-indigo {
+        --btn-bg: linear-gradient(135deg, #6366f1, #8b5cf6);
+        --btn-shadow: rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-pink {
+        --btn-bg: linear-gradient(135deg, #ec4899, #f472b6);
+        --btn-shadow: rgba(236, 72, 153, 0.5);
+    }
+
+    .btn-green {
+        --btn-bg: linear-gradient(135deg, #10b981, #34d399);
+        --btn-shadow: rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-blue {
+        --btn-bg: linear-gradient(135deg, #06b6d4, #3b82f6);
+        --btn-shadow: rgba(6, 182, 212, 0.5);
+    }
+
+    .btn-amber {
+        --btn-bg: linear-gradient(135deg, #f59e0b, #f97316);
+        --btn-shadow: rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-violet {
+        --btn-bg: linear-gradient(135deg, #a855f7, #ec4899);
+        --btn-shadow: rgba(168, 85, 247, 0.5);
+    }
+
+    /* ----- RECENT ACTIVITY ----- */
+
+    .activity-section {
+        margin-top: 3rem;
+    }
+
+    .activity-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 1.5rem;
+
+        flex-wrap: wrap;
+
+        gap: 12px;
+    }
+
+    .activity-title {
+        font-weight: 800;
+
+        color: #0f172a;
+
+        font-size: 1.35rem;
+
+        letter-spacing: -0.4px;
+
+        margin: 0;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 10px;
+    }
+
+    .activity-title .at-icon {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 11px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background:
+            linear-gradient(135deg, #6366f1, #8b5cf6);
+
+        color: #ffffff;
+
+        font-size: 0.95rem;
+
+        box-shadow:
+            0 6px 16px rgba(99, 102, 241, 0.35);
+    }
+
+    .activity-link {
+        color: #4f46e5;
+
+        text-decoration: none;
+
+        font-weight: 700;
+
+        font-size: 0.9rem;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 8px 16px;
+
+        border-radius: 50px;
+
+        border: 1px solid #e0e7ff;
+
+        background: #f5f7ff;
+
+        transition: all 0.25s ease;
+    }
+
+    .activity-link:hover {
+        color: #4338ca;
+
+        background: #eef2ff;
+
+        border-color: #c7d2fe;
+
+        transform: translateX(3px);
+    }
+
+    .activity-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e8f0;
+
+        border-radius: 22px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .activity-item {
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+        padding: 1.15rem 1.5rem;
+
+        border-bottom: 1px solid #f0f2f8;
+
+        transition: background 0.25s ease;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item:hover {
+        background: #fafbfe;
+    }
+
+    .activity-icon {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 14px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 1.4rem;
+
+        flex-shrink: 0;
+
+        box-shadow:
+            0 6px 16px -6px rgba(15, 23, 42, 0.15);
+    }
+
+    .activity-icon.icon-green {
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    }
+
+    .activity-icon.icon-pink {
+        background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+    }
+
+    .activity-icon.icon-indigo {
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    }
+
+    .activity-icon.icon-violet {
+        background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    }
+
+    .activity-body {
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    .activity-name {
+        font-weight: 700;
+
+        color: #0f172a;
+
+        font-size: 0.95rem;
+
+        margin: 0 0 3px;
+
+        letter-spacing: -0.1px;
+    }
+
+    .activity-desc {
+        color: #64748b;
+
+        font-size: 0.85rem;
+
+        margin: 0;
+
+        line-height: 1.5;
+    }
+
+    .activity-badge {
+        padding: 6px 14px;
+
+        border-radius: 50px;
+
+        font-size: 0.75rem;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+
+        flex-shrink: 0;
+    }
+
+    .activity-badge.bg-accepted {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .activity-badge.bg-pending {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .activity-badge.bg-unread {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .activity-badge.bg-skills {
+        background: #fdf2f8;
+        color: #db2777;
+    }
+
+    /* ----- RESPONSIVE ----- */
+
+    @media (max-width: 768px) {
+
+        .dash-page {
+            padding: 2rem 0.75rem 3rem;
+        }
+
+        .welcome-hero {
+            padding: 2.5rem 1.5rem;
+            border-radius: 24px;
+        }
+
+        .hero-badge-icon {
+            width: 78px;
+            height: 78px;
+            font-size: 2.3rem;
+        }
+
+        .stat-pill {
+            font-size: 0.82rem;
+            padding: 8px 14px;
+        }
+
+        .dash-card {
+            padding: 1.75rem 1.5rem 1.5rem;
+        }
+
+        .activity-item {
+            padding: 1rem 1.1rem;
+            gap: 12px;
+        }
+
+        .activity-icon {
+            width: 42px;
+            height: 42px;
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .activity-item {
+            flex-wrap: wrap;
+        }
+
+        .activity-badge {
+            align-self: flex-start;
+        }
+    }
+
+    .row.g-4 > [class*="col-"] {
+        margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 992px) {
+
+        .row.g-4 > [class*="col-"] {
+            margin-bottom: 0;
+        }
+    }
+
+    .activity-section {
+        margin-top: 2rem;
+    }
+
+</style>
+
+
+</head>
+
+<body>
+
+<div class="dash-page">
+
+<!-- ========== WELCOME HERO ========== -->
+
+<div class="welcome-hero">
+
+    <div class="hero-inner">
+
+        <div class="hero-badge-icon">🎓</div>
+
+        <h1 class="hero-title">
+            Welcome, {{ user.username }} 🎓
+        </h1>
+
+        <p class="hero-sub">
+            Exchange skills, learn from other students, and grow together.
+        </p>
+
+        <div class="stat-pills">
+
+            <div class="stat-pill">
+                <span class="pill-icon">👥</span>
+                {{ skills_offered }} Skills Offered
+            </div>
+
+            <div class="stat-pill">
+                <span class="pill-icon">📚</span>
+                {{ skills_wanted }} Skills Wanted
+            </div>
+
+            <div class="stat-pill">
+                <span class="pill-icon">🤝</span>
+                {{ accepted_requests }} Exchanges Accepted
+            </div>
+
+            <div class="stat-pill">
+                <span class="pill-icon">💬</span>
+                {{ unread_messages }} Unread Messages
+            </div>
+
+            <div class="stat-pill">
+                <span class="pill-icon">🔔</span>
+                {{ unread_notifications }} Notifications
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========== DASHBOARD CARDS ========== -->
+
+<div class="row g-4">
+
+    <!-- Profile -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #6366f1, #8b5cf6);">
+
+            <div class="dash-icon icon-indigo">👤</div>
+
+            <h4 class="dash-title">
+                My Profile
+            </h4>
+
+            <p class="dash-desc">
+                Manage your student profile.
+            </p>
+
+            <a href="{% url 'profile' %}"
+               class="btn-dash btn-indigo">
+
+                View Profile
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- My Skills -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #ec4899, #f472b6);">
+
+            <div class="dash-icon icon-pink">🎯</div>
+
+            <h4 class="dash-title">
+                My Skills
+            </h4>
+
+            <p class="dash-desc">
+                Add skills you can teach and skills you want to learn.
+            </p>
+
+            <a href="{% url 'skills' %}"
+               class="btn-dash btn-pink">
+
+                Manage Skills
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Find Students -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #10b981, #34d399);">
+
+            <div class="dash-icon icon-green">🤝</div>
+
+            <h4 class="dash-title">
+                Find Students
+            </h4>
+
+            <p class="dash-desc">
+                Find students who can exchange skills with you.
+            </p>
+
+            <a href="{% url 'find_students' %}"
+               class="btn-dash btn-green">
+
+                Find Students
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Exchange Requests -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #06b6d4, #3b82f6);">
+
+            <div class="dash-icon icon-blue">📩</div>
+
+            <h4 class="dash-title">
+                Exchange Requests
+            </h4>
+
+            <p class="dash-desc">
+                View and manage your skill exchange requests.
+            </p>
+
+            <div class="mini-stats">
+
+                <span class="mini-badge pending">
+                    {{ pending_requests }} Pending
+                </span>
+
+                <span class="mini-badge accepted">
+                    {{ accepted_requests }} Accepted
+                </span>
+
+            </div>
+
+            <a href="{% url 'exchange_requests' %}"
+               class="btn-dash btn-blue">
+
+                View Requests
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Messages -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #f59e0b, #f97316);">
+
+            <div class="dash-icon icon-amber">💬</div>
+
+            <h4 class="dash-title">
+                Messages
+            </h4>
+
+            <p class="dash-desc">
+                Communicate with other students.
+            </p>
+
+            <div class="mini-stats">
+
+                <span class="mini-badge unread">
+                    {{ unread_messages }} Unread
+                </span>
+
+            </div>
+
+            <a href="{% url 'messages_list' %}"
+               class="btn-dash btn-amber">
+
+                Messages
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Reviews -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #a855f7, #ec4899);">
+
+            <div class="dash-icon icon-violet">⭐</div>
+
+            <h4 class="dash-title">
+                Reviews
+            </h4>
+
+            <p class="dash-desc">
+                View your ratings and reviews.
+            </p>
+
+            <div class="star-row">
+                ★★★★★
+            </div>
+
+            <a href="{% url 'my_reviews' %}"
+               class="btn-dash btn-violet">
+
+                View Reviews
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Notifications -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #f59e0b, #f97316);">
+
+            <div class="dash-icon icon-amber">🔔</div>
+
+            <h4 class="dash-title">
+                Notifications
+            </h4>
+
+            <p class="dash-desc">
+                View your latest notifications.
+            </p>
+
+            <div class="mini-stats">
+
+                <span class="mini-badge pending">
+                    {{ unread_notifications }} Unread
+                </span>
+
+            </div>
+
+            <a href="{% url 'notifications' %}"
+               class="btn-dash btn-amber">
+
+                View Notifications
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Learning Sessions -->
+
+    <div class="col-md-6 col-lg-4">
+
+        <div class="dash-card"
+             style="--card-accent: linear-gradient(90deg, #8b5cf6, #a855f7);">
+
+            <div class="dash-icon icon-violet">
+                📅
+            </div>
+
+            <h4 class="dash-title">
+                Learning Sessions
+            </h4>
+
+            <p class="dash-desc">
+                View and manage your scheduled learning sessions.
+            </p>
+
+            <a href="{% url 'learning_sessions' %}"
+               class="btn-dash btn-violet">
+
+                View Sessions
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========== RECENT ACTIVITY ========== -->
+
+<div class="activity-section">
+
+    <div class="activity-header">
+
+        <h3 class="activity-title">
+
+            <span class="at-icon">
+                <i class="fas fa-chart-line"></i>
+            </span>
+
+            Recent Activity
+
+        </h3>
+
+        <a href="{% url 'notifications' %}"
+           class="activity-link">
+
+            View Notifications
+            <i class="fas fa-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+
+    <div class="activity-card">
+
+
+        <!-- Activity 1 -->
+
+        <div class="activity-item">
+
+            <div class="activity-icon icon-green">
+                🤝
+            </div>
+
+            <div class="activity-body">
+
+                <p class="activity-name">
+                    Skill exchange completed
+                </p>
+
+                <p class="activity-desc">
+                    Your accepted exchange requests will appear here.
+                </p>
+
+            </div>
+
+            <span class="activity-badge bg-accepted">
+                Accepted
+            </span>
+
+        </div>
+
+
+        <!-- Activity 2 -->
+
+        <div class="activity-item">
+
+            <div class="activity-icon icon-pink">
+                📩
+            </div>
+
+            <div class="activity-body">
+
+                <p class="activity-name">
+                    Exchange requests
+                </p>
+
+                <p class="activity-desc">
+                    You currently have
+                    {{ pending_requests }}
+                    pending request(s).
+                </p>
+
+            </div>
+
+            <span class="activity-badge bg-pending">
+                {{ pending_requests }} Pending
+            </span>
+
+        </div>
+
+
+        <!-- Activity 3 -->
+
+        <div class="activity-item">
+
+            <div class="activity-icon icon-indigo">
+                💬
+            </div>
+
+            <div class="activity-body">
+
+                <p class="activity-name">
+                    Messages
+                </p>
+
+                <p class="activity-desc">
+                    You have
+                    {{ unread_messages }}
+                    unread message(s).
+                </p>
+
+            </div>
+
+            <span class="activity-badge bg-unread">
+                {{ unread_messages }} Unread
+            </span>
+
+        </div>
+
+
+        <!-- Activity 4 -->
+
+        <div class="activity-item">
+
+            <div class="activity-icon icon-violet">
+                🎯
+            </div>
+
+            <div class="activity-body">
+
+                <p class="activity-name">
+                    Skills
+                </p>
+
+                <p class="activity-desc">
+                    You offer
+                    {{ skills_offered }}
+                    skill(s) and want to learn
+                    {{ skills_wanted }}
+                    skill(s).
+                </p>
+
+            </div>
+
+            <span class="activity-badge bg-skills">
+                Skills
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</div>
+
+</body>
+
+</html>

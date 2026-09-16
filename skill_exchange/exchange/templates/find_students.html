@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+
+{% block title %}
+Find Students
+{% endblock %}
+
+{% block content %}
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    .find-page {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f4f6fb;
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.07) 0%, transparent 40%),
+            radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.05) 0%, transparent 40%);
+        min-height: 100vh;
+        padding: 3rem 1rem 4rem;
+        margin: -1rem -0.75rem;
+        color: #0f172a;
+    }
+
+    .find-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* ============ HEADER ============ */
+    .students-header {
+        position: relative;
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 35%, #8b5cf6 70%, #d946ef 100%);
+        padding: 3.5rem 2rem;
+        border-radius: 28px;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: 0 20px 50px -12px rgba(99, 102, 241, 0.35);
+    }
+
+    .students-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 15% 25%, rgba(255,255,255,0.18) 0%, transparent 40%),
+            radial-gradient(circle at 85% 75%, rgba(255,255,255,0.12) 0%, transparent 40%),
+            radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .students-header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 75%);
+        -webkit-mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 75%);
+        pointer-events: none;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .students-header h1 {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -1px;
+        margin: 0 0 0.75rem;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .students-header p {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.08rem;
+        font-weight: 500;
+        max-width: 560px;
+        margin: 0 auto 1.5rem;
+        line-height: 1.6;
+    }
+
+    .student-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 22px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+    }
+
+    /* ============ STUDENT CARD ============ */
+    .student-card {
+        position: relative;
+        background: #ffffff;
+        border: 1px solid #e5e8f0;
+        border-radius: 22px;
+        padding: 2rem 1.75rem 1.75rem;
+        height: 100%;
+        text-align: center;
+        overflow: hidden;
+        transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+
+    .student-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+
+    .student-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .student-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.18);
+        border-color: transparent;
+    }
+
+    /* Gradient top accents — rotate through 6 colors */
+    .student-card:nth-child(6n+1)::before {
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    }
+    .student-card:nth-child(6n+2)::before {
+        background: linear-gradient(90deg, #ec4899, #f472b6);
+    }
+    .student-card:nth-child(6n+3)::before {
+        background: linear-gradient(90deg, #06b6d4, #22d3ee);
+    }
+    .student-card:nth-child(6n+4)::before {
+        background: linear-gradient(90deg, #10b981, #34d399);
+    }
+    .student-card:nth-child(6n+5)::before {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+    .student-card:nth-child(6n+6)::before {
+        background: linear-gradient(90deg, #f43f5e, #fb7185);
+    }
+
+    /* Sparkle icon top-right on hover */
+    .card-icon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #d97706;
+        font-size: 0.9rem;
+        opacity: 0;
+        transform: translateX(15px) scale(0.8);
+        transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 6px 15px rgba(217, 119, 6, 0.25);
+    }
+
+    .student-card:hover .card-icon {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+
+    /* ============ AVATAR ============ */
+    .avatar-wrap {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .profile-img,
+    .profile-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid #ffffff;
+        box-shadow:
+            0 0 0 4px rgba(99, 102, 241, 0.10),
+            0 10px 25px rgba(15, 23, 42, 0.10);
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: block;
+    }
+
+    .profile-placeholder {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.6rem;
+    }
+
+    .student-card:hover .profile-img,
+    .student-card:hover .profile-placeholder {
+        transform: scale(1.08) rotate(-4deg);
+        box-shadow:
+            0 0 0 6px rgba(99, 102, 241, 0.15),
+            0 14px 35px rgba(99, 102, 241, 0.25);
+    }
+
+    /* ============ TEXT ============ */
+    .student-name {
+        font-weight: 800;
+        color: #0f172a;
+        font-size: 1.25rem;
+        letter-spacing: -0.3px;
+        margin: 0.5rem 0 0.75rem;
+        transition: color 0.25s ease;
+    }
+
+    .student-card:hover .student-name {
+        color: #4f46e5;
+    }
+
+    .info-text {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 0 0 0.5rem;
+        padding: 5px 12px;
+        border-radius: 50px;
+        background: #f4f6fb;
+        transition: background 0.25s ease;
+    }
+
+    .student-card:hover .info-text {
+        background: #eef2ff;
+    }
+
+    .bio-text {
+        color: #64748b;
+        font-size: 0.9rem;
+        line-height: 1.65;
+        margin: 1rem 0 1.5rem;
+        padding: 0 4px;
+        font-weight: 500;
+    }
+
+    /* ============ BUTTON ============ */
+    .btn-view-profile {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 28px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #ffffff;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border: none;
+        text-decoration: none;
+        box-shadow: 0 8px 20px -6px rgba(99, 102, 241, 0.5);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+    }
+
+    .btn-view-profile::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+
+    .btn-view-profile:hover {
+        color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 14px 30px -6px rgba(99, 102, 241, 0.65);
+    }
+
+    .btn-view-profile:hover::after {
+        transform: translateX(100%);
+    }
+
+    /* ============ EMPTY STATE ============ */
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4.5rem 2rem;
+        background: #ffffff;
+        border: 1.5px dashed #d8dce8;
+        border-radius: 24px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    }
+
+    .empty-state-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        color: #4f46e5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 12px 30px -8px rgba(99, 102, 241, 0.3);
+    }
+
+    .empty-state h4 {
+        color: #0f172a;
+        font-weight: 800;
+        font-size: 1.35rem;
+        letter-spacing: -0.3px;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 1rem;
+        margin: 0;
+        max-width: 380px;
+        margin-inline: auto;
+        line-height: 1.6;
+    }
+
+    /* ============ BACK BUTTON ============ */
+    .back-area {
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 12px 26px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #475569;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        color: #4f46e5;
+        background: #f5f3ff;
+        border-color: #c7d2fe;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px -6px rgba(99, 102, 241, 0.25);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 768px) {
+        .find-page { padding: 2rem 0.75rem 3rem; }
+        .students-header { padding: 2.5rem 1.5rem; border-radius: 24px; }
+        .students-header p { font-size: 1rem; }
+        .student-card { padding: 1.75rem 1.5rem 1.5rem; }
+    }
+</style>
+
+<div class="find-page">
+    <div class="find-container">
+
+        <!-- ============ HEADER ============ -->
+        <div class="students-header">
+            <div class="header-content">
+                <h1>Find Students</h1>
+                <p>
+                    Discover students and connect with people who have useful skills.
+                </p>
+                <span class="student-count">
+                    ⭐ {{ students|length }} Students Available
+                </span>
+            </div>
+        </div>
+
+
+        <!-- ============ STUDENT GRID ============ -->
+        <div class="row g-4">
+
+            {% for student in students %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="student-card">
+
+                        <!-- Hover sparkle -->
+                        <div class="card-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="avatar-wrap">
+                            {% if student.profile_picture %}
+                                <img src="{{ student.profile_picture.url }}"
+                                     alt="{{ student.user.username }}"
+                                     class="profile-img">
+                            {% else %}
+                                <div class="profile-placeholder">👤</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Name -->
+                        <h4 class="student-name">
+                            {{ student.user.username }}
+                        </h4>
+
+                        <!-- Education -->
+                        {% if student.education %}
+                            <div class="info-text">
+                                🎓 {{ student.education }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Location -->
+                        {% if student.location %}
+                            <div class="info-text">
+                                📍 {{ student.location }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Bio -->
+                        {% if student.bio %}
+                            <p class="bio-text">
+                                {{ student.bio|truncatewords:15 }}
+                            </p>
+                        {% endif %}
+
+                        <!-- View Profile -->
+                        <a href="{% url 'student_profile' student.id %}"
+                           class="btn-view-profile">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h4>No students found.</h4>
+                    <p>There are no student profiles available yet.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ============ BACK BUTTON ============ -->
+        <div class="back-area">
+            <a href="{% url 'dashboard' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+    /* ============================================
+       NOTIFICATIONS PAGE
+    ============================================ */
+    .notif-page {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: #0f172a;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ---------- HEADER ---------- */
+    .notif-header {
+        text-align: center;
+        margin-bottom: 2.2rem;
+    }
+
+    .notif-header .notif-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        box-shadow: 0 12px 28px -10px rgba(99, 102, 241, 0.45);
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+        animation: bellWiggle 3.5s ease-in-out infinite;
+        transform-origin: top center;
+    }
+
+    @keyframes bellWiggle {
+        0%, 85%, 100% { transform: rotate(0deg); }
+        88%           { transform: rotate(12deg); }
+        91%           { transform: rotate(-10deg); }
+        94%           { transform: rotate(6deg); }
+        97%           { transform: rotate(-4deg); }
+    }
+
+    .notif-header h2 {
+        font-size: 2.1rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #0f172a;
+        margin-bottom: 0.35rem;
+    }
+
+    .notif-header p {
+        color: #64748b;
+        font-size: 1.02rem;
+        margin-bottom: 0;
+    }
+
+    /* ---------- NOTIFICATION CARD ---------- */
+    .notif-card {
+        position: relative;
+        border: none;
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px -8px rgba(15, 23, 42, 0.1);
+        padding: 1.35rem 1.5rem 1.35rem 2rem;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                    box-shadow 0.35s ease;
+    }
+
+    /* Left gradient accent bar */
+    .notif-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 6px;
+        background: linear-gradient(180deg, #6366f1, #8b5cf6, #ec4899);
+        border-radius: 20px 0 0 20px;
+    }
+
+    /* Soft glow on hover */
+    .notif-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), transparent 55%);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        pointer-events: none;
+        border-radius: 20px;
+    }
+
+    .notif-card:hover {
+        transform: translateY(-4px) translateX(4px);
+        box-shadow: 0 18px 40px -12px rgba(99, 102, 241, 0.35);
+    }
+
+    .notif-card:hover::after {
+        opacity: 1;
+    }
+
+    /* Card inner layout */
+    .notif-inner {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .notif-emoji-badge {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+        font-size: 1.35rem;
+        box-shadow: 0 4px 12px -4px rgba(99, 102, 241, 0.35);
+        transition: transform 0.35s ease;
+    }
+
+    .notif-card:hover .notif-emoji-badge {
+        transform: scale(1.1) rotate(-6deg);
+    }
+
+    .notif-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .notif-message {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1e293b;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+        word-break: break-word;
+    }
+
+    .notif-time {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 0.28rem 0.85rem;
+        border-radius: 50px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .notif-time i {
+        font-size: 0.75rem;
+        color: #6366f1;
+    }
+
+    /* Unread pulse dot (decorative) */
+    .notif-dot {
+        flex-shrink: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        margin-top: 0.5rem;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+        0%, 100% { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+        50%      { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.05); }
+    }
+
+    /* ---------- EMPTY STATE ---------- */
+    .notif-empty {
+        text-align: center;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 3.5rem 1.5rem;
+        box-shadow: 0 12px 32px -14px rgba(15, 23, 42, 0.15);
+        border: 1px dashed #e2e8f0;
+        max-width: 480px;
+        margin: 2rem auto 0;
+    }
+
+    .notif-empty .empty-bell {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        font-size: 3rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 12px 28px -12px rgba(99, 102, 241, 0.3);
+        animation: gentleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes gentleFloat {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-8px); }
+    }
+
+    .notif-empty h4 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    .notif-empty p {
+        color: #64748b;
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    /* ---------- BACK BUTTON ---------- */
+    .notif-back-wrap {
+        text-align: center;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .notif-back-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.98rem;
+        color: #1e293b;
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 14px -6px rgba(15, 23, 42, 0.15);
+    }
+
+    .notif-back-btn:hover {
+        transform: translateY(-3px);
+        color: #6366f1;
+        border-color: #6366f1;
+        box-shadow: 0 16px 32px -12px rgba(99, 102, 241, 0.45);
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 576px) {
+        .notif-header h2 { font-size: 1.7rem; }
+        .notif-header .notif-icon-circle { width: 64px; height: 64px; font-size: 1.8rem; }
+        .notif-card { padding: 1.15rem 1.15rem 1.15rem 1.5rem; }
+        .notif-emoji-badge { width: 40px; height: 40px; font-size: 1.15rem; }
+        .notif-message { font-size: 0.98rem; }
+        .notif-dot { display: none; }
+    }
+
+</style>
+
+
+<div class="container mt-5 notif-page">
+
+    <!-- ============================================
+         HEADER
+    ============================================ -->
+    <div class="notif-header">
+        <div class="notif-icon-circle">🔔</div>
+        <h2>Notifications</h2>
+        <p>Your latest notifications</p>
+    </div>
+
+
+    <!-- ============================================
+         NOTIFICATIONS LIST
+    ============================================ -->
+    {% if notifications %}
+
+        {% for notification in notifications %}
+
+            <div class="notif-card">
+                <div class="notif-inner">
+
+                    <div class="notif-emoji-badge">🔔</div>
+
+                    <div class="notif-text">
+                        <div class="notif-message">
+                            {{ notification.message }}
+                        </div>
+                        <span class="notif-time">
+                            <i class="fas fa-clock"></i>
+                            {{ notification.created_at|date:"d M Y, h:i A" }}
+                        </span>
+                    </div>
+
+                    <span class="notif-dot" title="New"></span>
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <!-- ============================================
+             EMPTY STATE
+        ============================================ -->
+        <div class="notif-empty">
+            <div class="empty-bell">🔕</div>
+            <h4>No notifications</h4>
+            <p>You don't have any notifications yet.</p>
+        </div>
+
+    {% endif %}
+
+
+    <!-- ============================================
+         BACK BUTTON
+    ============================================ -->
+    <div class="notif-back-wrap">
+        <a href="{% url 'dashboard' %}" class="notif-back-btn">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}
